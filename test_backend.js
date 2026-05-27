@@ -22,6 +22,7 @@ const mockDatabase = {
   notes: [],
   meetings: [],
   notifications: [],
+  refreshTokens: [],
 };
 
 const mockCollection = (name) => {
@@ -102,6 +103,41 @@ const mockCollection = (name) => {
       });
     },
     createIndex: async () => {},
+    aggregate: (pipeline) => {
+      // Stub aggregation results for the attendance report
+      return {
+        toArray: async () => {
+          // If we query users for workspace report:
+          if (name === 'users') {
+            const workspace = mockDatabase.workspaces[0];
+            const members = store.filter(user => 
+              workspace.members.some(m => m.userId.toString() === user._id.toString()) ||
+              workspace.ownerId.toString() === user._id.toString()
+            );
+            return members.map(u => {
+              const logs = mockDatabase.attendance.filter(log => log.userId.toString() === u._id.toString());
+              const presentCount = logs.filter(l => l.status === 'Present').length;
+              const lateCount = logs.filter(l => l.status === 'Late').length;
+              const halfDayCount = logs.filter(l => l.status === 'Half Day').length;
+              const absentCount = logs.filter(l => l.status === 'Absent').length;
+              const totalHours = logs.reduce((sum, l) => sum + (l.totalHours || 0), 0);
+              return {
+                _id: u._id,
+                name: u.name,
+                email: u.email,
+                totalDays: logs.length,
+                presentCount,
+                lateCount,
+                halfDayCount,
+                absentCount,
+                avgHours: logs.length > 0 ? parseFloat((totalHours / logs.length).toFixed(2)) : 0.0,
+              };
+            });
+          }
+          return [];
+        }
+      };
+    }
   };
 };
 
@@ -141,7 +177,30 @@ async function runTests() {
   assert.strictEqual(loginRes.user.email, 'jane@example.com');
   assert.ok(loginRes.accessToken);
   assert.ok(loginRes.refreshToken);
-  console.log('✅ Auth registration & login test passed.');
+
+  // Assert that refresh token has been whitelisted in DB
+  const whitelistedToken = mockDatabase.refreshTokens.find(t => t.token === loginRes.refreshToken);
+  assert.ok(whitelistedToken);
+  assert.strictEqual(whitelistedToken.userId.toString(), testUser._id.toString());
+
+  // Test token rotation on refresh
+  const refreshed = await authService.refreshToken(loginRes.refreshToken);
+  assert.ok(refreshed.accessToken);
+  assert.ok(refreshed.refreshToken);
+  assert.notStrictEqual(refreshed.refreshToken, loginRes.refreshToken);
+
+  // Assert that the old refresh token was deleted and the new one was saved
+  const oldTokenDoc = mockDatabase.refreshTokens.find(t => t.token === loginRes.refreshToken);
+  const newTokenDoc = mockDatabase.refreshTokens.find(t => t.token === refreshed.refreshToken);
+  assert.strictEqual(oldTokenDoc, undefined);
+  assert.ok(newTokenDoc);
+
+  // Test token revocation on logout
+  await authService.logout(refreshed.refreshToken);
+  const revokedTokenDoc = mockDatabase.refreshTokens.find(t => t.token === refreshed.refreshToken);
+  assert.strictEqual(revokedTokenDoc, undefined);
+
+  console.log('✅ Auth registration, login, rotation & logout tests passed.');
 
   // ── Test 2: Task Status Role Gating ──────────────────────
   console.log('\nTesting Task Status Gating...');
