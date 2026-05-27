@@ -18,6 +18,11 @@ const meetingRoutes = require('../modules/meetings/meeting.routes');
 const notificationRoutes = require('../modules/notifications/notification.routes');
 const salesRoutes = require('../modules/sales/sales.routes');
 
+// Admin, analytics, and export sub-routers
+const adminRoutes = require('./admin.routes');
+const analyticsRoutes = require('./analytics.routes');
+const exportRoutes = require('./export.routes');
+
 const router = Router();
 
 // Health check endpoint directly on root level (GET /api/v1/health)
@@ -53,5 +58,10 @@ router.use('/notes', notesRoutes);
 router.use('/meetings', meetingRoutes);
 router.use('/notifications', notificationRoutes);
 router.use('/sales', salesRoutes);
+
+// Admin, analytics, and export mounts
+router.use('/admin', adminRoutes);
+router.use('/analytics', analyticsRoutes);
+router.use('/export', exportRoutes);
 
 module.exports = router;
