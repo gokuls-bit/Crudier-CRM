@@ -2,10 +2,10 @@
   "name": "crudier",
   "version": "1.0.0",
   "description": "Crudier CRM — Node.js / Express backend API",
-  "main": "src/server.js",
+  "main": "server.js",
   "scripts": {
-    "start": "node src/server.js",
-    "dev": "node --watch src/server.js",
+    "start": "node server.js",
+    "dev": "node --watch server.js",
     "lint": "npx eslint src/ --ext .js",
     "test": "echo \"Error: no test specified\" && exit 1"
   },
