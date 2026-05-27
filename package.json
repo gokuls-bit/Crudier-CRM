@@ -9,7 +9,12 @@
     "lint": "npx eslint src/ --ext .js",
     "test": "echo \"Error: no test specified\" && exit 1"
   },
-  "keywords": ["crm", "express", "mongodb", "api"],
+  "keywords": [
+    "crm",
+    "express",
+    "mongodb",
+    "api"
+  ],
   "author": "",
   "license": "ISC",
   "type": "commonjs",
@@ -24,6 +29,7 @@
     "jsonwebtoken": "^9.0.3",
     "mongodb": "^7.2.0",
     "morgan": "^1.10.1",
-    "multer": "^2.1.1"
+    "multer": "^2.1.1",
+    "socket.io": "^4.8.3"
   }
 }
