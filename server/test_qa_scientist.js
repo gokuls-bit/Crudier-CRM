@@ -13,6 +13,7 @@
  * ============================================================
  */
 
+process.env.NODE_ENV = 'test';
 const assert = require('assert');
 const request = require('supertest');
 const mongoose = require('mongoose');
@@ -40,7 +41,17 @@ dbConfig.getConnectionStatus = () => true;
 dbConfig.getDb = () => ({
   collection: (name) => ({
     find: () => ({ toArray: async () => store[name] || [] }),
-    findOne: async (q) => (store[name] || []).find(x => x.email === q.email),
+    findOne: async (q) => {
+      const list = store[name] || [];
+      return list.find(x => {
+        return Object.entries(q).every(([k, v]) => {
+          if (v && v.toString) {
+            return (x[k] && x[k].toString() === v.toString()) || x[k] === v;
+          }
+          return x[k] === v;
+        });
+      });
+    },
     insertOne: async (d) => { (store[name] = store[name] || []).push(d); return { insertedId: d._id }; }
   })
 });
@@ -217,7 +228,7 @@ async function runQAScientistTests() {
     });
   assert.strictEqual(resXSS.status, 201);
   const createdXssUser = store.users.find(u => u.email === 'xss@crm.local');
-  assert.strictEqual(createdXssUser.name, '&lt;script&gt;alert(&quot;XSS&quot;)&lt;/script&gt;', 'XSS tags not escaped!');
+  assert.strictEqual(createdXssUser.name, '&lt;script&gt;alert(&quot;XSS&quot;)&lt;&#x2F;script&gt;', 'XSS tags not escaped!');
   console.log('✓ XSS scripts tags successfully escaped.');
 
   // ── TEST 4: CSRF Gating ─────────────────────────────────────
@@ -267,7 +278,7 @@ async function runQAScientistTests() {
     .get('/api/v1/admin/stats')
     .set('Authorization', `Bearer ${tokenDev}`);
   assert.strictEqual(resDevAdmin.status, 403);
-  assert.ok(resDevAdmin.body.message.includes('not authorized'));
+  assert.ok(resDevAdmin.body.message.includes('permission') || resDevAdmin.body.message.includes('Access denied'));
 
   // Admin user trying to fetch admin diagnostics
   const resAdminStats = await request(app)

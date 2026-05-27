@@ -67,6 +67,10 @@ app.use(sanitize);
 // ── 7. Cookie Parser ────────────────────────────────────────
 app.use(cookieParser());
 
+// ── 7.1. CSRF Protection (Double-Submit Cookie validation) ──
+const csrf = require('./src/middlewares/csrf.middleware');
+app.use(csrf);
+
 // ── 8. Global Rate Limiter ──────────────────────────────────
 app.use(globalRateLimiter);
 
