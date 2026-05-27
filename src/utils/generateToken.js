@@ -25,9 +25,16 @@ const generateTokens = (user) => {
     expiresIn: env.jwtExpiresIn,
   });
 
-  const refreshToken = jwt.sign({ id: user._id.toString() }, env.jwtRefreshSecret, {
-    expiresIn: env.jwtRefreshExpiresIn,
-  });
+  const refreshToken = jwt.sign(
+    { 
+      id: user._id.toString(),
+      jti: `${Date.now()}-${Math.random().toString(36).substring(2, 10)}`
+    }, 
+    env.jwtRefreshSecret, 
+    {
+      expiresIn: env.jwtRefreshExpiresIn,
+    }
+  );
 
   return { accessToken, refreshToken };
 };
