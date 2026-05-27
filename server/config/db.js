@@ -1,85 +1,100 @@
 /**
  * ============================================================
- * Crudier CRM — MongoDB Connection Utility
+ * Crudier CRM — Database Utility (Mongoose)
  * ============================================================
- * Reusable DB client using raw driver.
- * ============================================================
+ * Configures the Mongoose connection to MongoDB Atlas,
+ * offering auto-reconnect logic and exporting helper
+ * methods to retrieve the raw database/client objects.
  */
 
-const { MongoClient } = require('mongodb');
+const mongoose = require('mongoose');
 const config = require('./env');
+const logger = require('./logger');
 
-/** @type {MongoClient | null} */
-let client = null;
-/** @type {import('mongodb').Db | null} */
-let db = null;
 let isConnected = false;
 
+/**
+ * Connect to MongoDB Atlas via Mongoose with exponential backoff retry.
+ */
 async function connectDB(maxRetries = 5, baseDelay = 3000) {
-  if (db) return db;
+  if (mongoose.connection.readyState === 1) {
+    isConnected = true;
+    return mongoose.connection.db;
+  }
 
   for (let attempt = 1; attempt <= maxRetries; attempt++) {
     try {
-      console.log(`[MongoDB] Connection attempt ${attempt}/${maxRetries}...`);
-      client = new MongoClient(config.mongoUri, {
-        maxPoolSize: 10,
-        minPoolSize: 2,
-        serverSelectionTimeoutMS: 5000,
-        socketTimeoutMS: 45000,
+      logger.info(`[MongoDB] Connection attempt ${attempt}/${maxRetries}...`);
+      await mongoose.connect(config.mongoUri, {
+        dbName: config.mongoDbName,
       });
 
-      await client.connect();
-      db = client.db(config.mongoDbName);
-      
-      // Ping check
-      await db.command({ ping: 1 });
       isConnected = true;
-      console.log(`[MongoDB] ✓ Connected to "${config.mongoDbName}" database.`);
+      logger.info(`[MongoDB] ✓ Connected to "${config.mongoDbName}" database.`);
 
-      client.on('close', () => {
+      // Listen for connection status changes
+      mongoose.connection.on('disconnected', () => {
         isConnected = false;
-        console.warn('[MongoDB] ✗ Connection closed');
+        logger.warn('[MongoDB] ✗ Connection disconnected.');
       });
 
-      client.on('reconnected', () => {
+      mongoose.connection.on('reconnected', () => {
         isConnected = true;
-        console.log('[MongoDB] ↻ Reconnected');
+        logger.info('[MongoDB] ↻ Reconnected.');
       });
 
-      return db;
+      mongoose.connection.on('error', (err) => {
+        logger.error('[MongoDB] Connection error:', err);
+      });
+
+      return mongoose.connection.db;
     } catch (err) {
-      console.error(`[MongoDB] Attempt ${attempt} failed: ${err.message}`);
+      logger.error(`[MongoDB] Attempt ${attempt} failed: ${err.message}`);
       if (attempt === maxRetries) {
-        console.error('[MongoDB] All retry attempts exhausted.');
+        logger.error('[MongoDB] All retry attempts exhausted.');
         process.exit(1);
       }
       const delay = baseDelay * Math.pow(2, attempt - 1);
-      await new Promise((res) => setTimeout(res, delay));
+      await new Promise((resolve) => setTimeout(resolve, delay));
     }
   }
 }
 
+/**
+ * Get the active raw MongoDB database handle.
+ */
 function getDb() {
-  if (!db) throw new Error('Database not initialized. Call connectDB() first.');
-  return db;
+  if (!mongoose.connection || mongoose.connection.readyState !== 1) {
+    throw new Error('Database not initialized. Call connectDB() first.');
+  }
+  return mongoose.connection.db;
 }
 
+/**
+ * Get the active raw MongoClient.
+ */
 function getClient() {
-  if (!client) throw new Error('MongoClient not initialized. Call connectDB() first.');
-  return client;
+  if (!mongoose.connection || mongoose.connection.readyState !== 1) {
+    throw new Error('MongoClient not initialized. Call connectDB() first.');
+  }
+  return mongoose.connection.getClient();
 }
 
+/**
+ * Check if the database is currently connected.
+ */
 function getConnectionStatus() {
-  return isConnected;
+  return mongoose.connection.readyState === 1;
 }
 
+/**
+ * Close the Mongoose connection cleanly.
+ */
 async function closeDB() {
-  if (client) {
-    await client.close();
+  if (mongoose.connection) {
+    await mongoose.disconnect();
     isConnected = false;
-    db = null;
-    client = null;
-    console.log('[MongoDB] Connection closed.');
+    logger.info('[MongoDB] Connection closed.');
   }
 }
 
