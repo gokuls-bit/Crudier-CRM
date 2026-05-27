@@ -67,6 +67,10 @@ const authService = {
 
     const tokens = generateTokens(user);
     
+    // Save refresh token to whitelist DB
+    const expiresAt = new Date(Date.now() + 7 * 24 * 60 * 60 * 1000); // 7 days
+    await authRepository.saveRefreshToken(user._id, tokens.refreshToken, expiresAt);
+
     // Remove password from returned user object
     const userResponse = { ...user };
     delete userResponse.password;
@@ -82,6 +86,12 @@ const authService = {
       throw new ApiError('Refresh failed: Refresh token is missing.', 401);
     }
 
+    // Verify token exists in database whitelist
+    const whitelisted = await authRepository.findRefreshToken(token);
+    if (!whitelisted) {
+      throw new ApiError('Refresh failed: Refresh token has been revoked.', 401);
+    }
+
     try {
       const decoded = jwt.verify(token, env.jwtRefreshSecret);
       const user = await authRepository.findById(decoded.id);
@@ -94,11 +104,28 @@ const authService = {
         throw new ApiError('Refresh failed: User account is inactive.', 403);
       }
 
-      // Generate a new set of tokens (sliding window / rotation option)
+      // Generate a new set of tokens (rotation strategy)
       const tokens = generateTokens(user);
+
+      // Rotate: delete the old one and save the new one
+      await authRepository.deleteRefreshToken(token);
+      const expiresAt = new Date(Date.now() + 7 * 24 * 60 * 60 * 1000);
+      await authRepository.saveRefreshToken(user._id, tokens.refreshToken, expiresAt);
+
       return tokens;
     } catch (err) {
+      // Clean up invalid/expired tokens from DB if present
+      await authRepository.deleteRefreshToken(token);
       throw new ApiError('Refresh failed: Invalid or expired refresh token.', 401);
+    }
+  },
+
+  /**
+   * Log out and revoke refresh token.
+   */
+  logout: async (token) => {
+    if (token) {
+      await authRepository.deleteRefreshToken(token);
     }
   },
 };

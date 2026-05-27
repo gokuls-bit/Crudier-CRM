@@ -93,7 +93,48 @@ const authRepository = {
       { $set: cleanUpdate }
     );
     return db.collection(COLLECTION_NAME).findOne({ _id: new ObjectId(userId) });
-  }
+  },
+
+  // ── Refresh Token Whitelisting ───────────────────────────
+
+  /**
+   * Save a newly issued refresh token.
+   */
+  saveRefreshToken: async (userId, token, expiresAt) => {
+    const db = getDb();
+    await db.collection('refreshTokens').insertOne({
+      userId: new ObjectId(userId),
+      token,
+      expiresAt: expiresAt || new Date(Date.now() + 7 * 24 * 60 * 60 * 1000),
+      createdAt: new Date(),
+    });
+  },
+
+  /**
+   * Check if refresh token is in whitelist.
+   */
+  findRefreshToken: async (token) => {
+    const db = getDb();
+    return db.collection('refreshTokens').findOne({ token });
+  },
+
+  /**
+   * Revoke a single refresh token (e.g. on logout).
+   */
+  deleteRefreshToken: async (token) => {
+    const db = getDb();
+    const result = await db.collection('refreshTokens').deleteOne({ token });
+    return result.deletedCount > 0;
+  },
+
+  /**
+   * Revoke all refresh tokens for a user (e.g. password change).
+   */
+  deleteUserRefreshTokens: async (userId) => {
+    const db = getDb();
+    const result = await db.collection('refreshTokens').deleteMany({ userId: new ObjectId(userId) });
+    return result.deletedCount;
+  },
 };
 
 module.exports = authRepository;
