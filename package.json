@@ -1,0 +1,29 @@
+{
+  "name": "crudier",
+  "version": "1.0.0",
+  "description": "Crudier CRM — Node.js / Express backend API",
+  "main": "src/server.js",
+  "scripts": {
+    "start": "node src/server.js",
+    "dev": "node --watch src/server.js",
+    "lint": "npx eslint src/ --ext .js",
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "keywords": ["crm", "express", "mongodb", "api"],
+  "author": "",
+  "license": "ISC",
+  "type": "commonjs",
+  "dependencies": {
+    "bcryptjs": "^3.0.3",
+    "cookie-parser": "^1.4.7",
+    "cors": "^2.8.6",
+    "dotenv": "^17.4.2",
+    "express": "^5.2.1",
+    "express-rate-limit": "^8.5.2",
+    "helmet": "^8.2.0",
+    "jsonwebtoken": "^9.0.3",
+    "mongodb": "^7.2.0",
+    "morgan": "^1.10.1",
+    "multer": "^2.1.1"
+  }
+}
