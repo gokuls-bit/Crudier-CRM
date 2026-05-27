@@ -10,6 +10,8 @@
 
 const assert = require('assert');
 
+const { ObjectId } = require('mongodb');
+
 // ── Mocking database layer ──────────────────────────────────
 const mockDatabase = {
   users: [],
@@ -36,7 +38,7 @@ const mockCollection = (name) => {
       });
     },
     insertOne: async (doc) => {
-      doc._id = doc._id || Math.random().toString(36).substring(7);
+      doc._id = doc._id || new ObjectId();
       store.push(doc);
       return { insertedId: doc._id };
     },
@@ -143,9 +145,10 @@ async function runTests() {
 
   // ── Test 2: Task Status Role Gating ──────────────────────
   console.log('\nTesting Task Status Gating...');
-  const actorDev = { _id: testUser._id, role: 'Developer', workspaceId: 'ws1' };
-  const actorLead = { _id: 'leadId', role: 'Team Lead', workspaceId: 'ws1' };
-  const actorAdmin = { _id: 'adminId', role: 'Admin', workspaceId: 'ws1' };
+  const validWorkspaceId = '111111111111111111111111';
+  const actorDev = { _id: testUser._id, role: 'Developer', workspaceId: validWorkspaceId };
+  const actorLead = { _id: '222222222222222222222222', role: 'Team Lead', workspaceId: validWorkspaceId };
+  const actorAdmin = { _id: '333333333333333333333333', role: 'Admin', workspaceId: validWorkspaceId };
 
   const task = await taskService.create({
     title: 'Code review dashboard',
@@ -177,18 +180,18 @@ async function runTests() {
   console.log('\nTesting Attendance Auto Status & Checkout...');
   // Check-in on time (9:00 AM)
   const timeOnTime = new Date('2026-05-28T09:00:00');
-  const recordOnTime = await attendanceService.checkIn(testUser._id, 'ws1', timeOnTime);
+  const recordOnTime = await attendanceService.checkIn(testUser._id, validWorkspaceId, timeOnTime);
   assert.strictEqual(recordOnTime.status, 'Present');
 
   // Check-in late (10:00 AM)
   const timeLate = new Date('2026-05-28T10:00:00');
   mockDatabase.attendance = []; // Clear for next check-in
-  const recordLate = await attendanceService.checkIn(testUser._id, 'ws1', timeLate);
+  const recordLate = await attendanceService.checkIn(testUser._id, validWorkspaceId, timeLate);
   assert.strictEqual(recordLate.status, 'Late');
 
   // Check-out under 4 hours (e.g. checked in at 9:00 AM, check out at 11:30 AM -> 2.5 hours)
   mockDatabase.attendance = [];
-  await attendanceService.checkIn(testUser._id, 'ws1', timeOnTime);
+  await attendanceService.checkIn(testUser._id, validWorkspaceId, timeOnTime);
   const checkoutTime = new Date('2026-05-28T11:30:00');
   const checkedOut = await attendanceService.checkOut(testUser._id, checkoutTime);
   // Status should be downgraded to Half Day
@@ -200,13 +203,13 @@ async function runTests() {
   console.log('\nTesting Meeting scheduling validations...');
   // Stub workspace check
   const workspaceMock = {
-    _id: 'ws1',
+    _id: validWorkspaceId,
     members: [{ userId: testUser._id }],
-    ownerId: 'ownerId',
+    ownerId: '444444444444444444444444',
   };
   mockDatabase.workspaces.push(workspaceMock);
 
-  const actorFounder = { _id: 'ownerId', role: 'Founder', workspaceId: 'ws1' };
+  const actorFounder = { _id: '444444444444444444444444', role: 'Founder', workspaceId: validWorkspaceId };
 
   // Future start / End time validation
   const pastStart = new Date(Date.now() - 10000);
