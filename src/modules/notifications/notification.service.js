@@ -1,11 +1,12 @@
 /**
  * ============================================================
- * Crudier CRM — Notification Service (Base Skeleton)
+ * Crudier CRM — Notification Service
  * ============================================================
  */
 
 const { ObjectId } = require('mongodb');
 const { getDb } = require('../../../config/db');
+const notificationRepository = require('./notification.repository');
 
 const COLLECTION_NAME = 'notifications';
 
@@ -59,8 +60,7 @@ const notificationService = {
 
     const result = await db.collection(COLLECTION_NAME).insertOne(notification);
     
-    // Broadcast via Socket.IO if helper is loaded
-    // We can do global.io emit or call a handler
+    // Broadcast via Socket.IO
     if (global.io) {
       global.io.to(`user_${recipientId.toString()}`).emit('notification', {
         _id: result.insertedId,
@@ -69,6 +69,48 @@ const notificationService = {
     }
 
     return { _id: result.insertedId, ...notification };
+  },
+
+  /**
+   * Get paginated user notifications.
+   */
+  getUserNotifications: async (userId, filters, limit, skip) => {
+    return notificationRepository.getUserNotifications(userId, filters, limit, skip);
+  },
+
+  /**
+   * Get unread notifications count.
+   */
+  getUnreadCount: async (userId) => {
+    return notificationRepository.countUnread(userId);
+  },
+
+  /**
+   * Mark notification as read.
+   */
+  markAsRead: async (id) => {
+    return notificationRepository.updateReadStatus(id, true);
+  },
+
+  /**
+   * Mark all user notifications as read.
+   */
+  markAllAsRead: async (userId) => {
+    return notificationRepository.markAllAsRead(userId);
+  },
+
+  /**
+   * Delete notification.
+   */
+  delete: async (id) => {
+    return notificationRepository.deleteNotification(id);
+  },
+
+  /**
+   * Clear all user notifications.
+   */
+  clearAll: async (userId) => {
+    return notificationRepository.clearAllNotifications(userId);
   },
 };
 
