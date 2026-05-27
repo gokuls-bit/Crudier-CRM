@@ -46,6 +46,9 @@ const authController = {
    * Logout handler.
    */
   logout: async (req, res) => {
+    const token = req.cookies.refreshToken || req.body.refreshToken;
+    await authService.logout(token);
+
     res.clearCookie('refreshToken');
     res.clearCookie('accessToken');
     return ApiResponse.success(res, 'Logged out successfully.');

@@ -95,58 +95,100 @@ const attendanceRepository = {
   getWorkspaceReport: async (workspaceId) => {
     const db = getDb();
 
-    // Pipeline groups all attendance records for a workspace by user,
-    // joins with the user profile to fetch name/email, and aggregates stats.
+    // 1. Get member list from workspace
+    const workspace = await db.collection('workspaces').findOne({ _id: new ObjectId(workspaceId) });
+    if (!workspace) return [];
+
+    const memberIds = workspace.members.map((m) => m.userId);
+    if (workspace.ownerId) {
+      memberIds.push(workspace.ownerId);
+    }
+
+    // 2. Aggregate stats starting from users collection to ensure 0-record users are included
     const pipeline = [
       {
-        $match: { workspaceId: new ObjectId(workspaceId) }
-      },
-      {
-        $group: {
-          _id: '$userId',
-          totalDays: { $sum: 1 },
-          presentCount: {
-            $sum: { $cond: [{ $eq: ['$status', 'Present'] }, 1, 0] }
-          },
-          lateCount: {
-            $sum: { $cond: [{ $eq: ['$status', 'Late'] }, 1, 0] }
-          },
-          halfDayCount: {
-            $sum: { $cond: [{ $eq: ['$status', 'Half Day'] }, 1, 0] }
-          },
-          absentCount: {
-            $sum: { $cond: [{ $eq: ['$status', 'Absent'] }, 1, 0] }
-          },
-          avgHours: { $avg: '$totalHours' }
-        }
+        $match: { _id: { $in: memberIds } }
       },
       {
         $lookup: {
-          from: 'users',
-          localField: '_id',
-          foreignField: '_id',
-          as: 'userProfile'
+          from: 'attendance',
+          let: { userId: '$_id' },
+          pipeline: [
+            {
+              $match: {
+                $expr: {
+                  $and: [
+                    { $eq: ['$userId', '$$userId'] },
+                    { $eq: ['$workspaceId', new ObjectId(workspaceId)] }
+                  ]
+                }
+              }
+            }
+          ],
+          as: 'logs'
         }
-      },
-      {
-        $unwind: '$userProfile'
       },
       {
         $project: {
           _id: 1,
-          name: '$userProfile.name',
-          email: '$userProfile.email',
+          name: 1,
+          email: 1,
+          totalDays: { $size: '$logs' },
+          presentCount: {
+            $size: {
+              $filter: {
+                input: '$logs',
+                as: 'log',
+                cond: { $eq: ['$$log.status', 'Present'] }
+              }
+            }
+          },
+          lateCount: {
+            $size: {
+              $filter: {
+                input: '$logs',
+                as: 'log',
+                cond: { $eq: ['$$log.status', 'Late'] }
+              }
+            }
+          },
+          halfDayCount: {
+            $size: {
+              $filter: {
+                input: '$logs',
+                as: 'log',
+                cond: { $eq: ['$$log.status', 'Half Day'] }
+              }
+            }
+          },
+          absentCount: {
+            $size: {
+              $filter: {
+                input: '$logs',
+                as: 'log',
+                cond: { $eq: ['$$log.status', 'Absent'] }
+              }
+            }
+          },
+          avgHours: { $avg: '$logs.totalHours' }
+        }
+      },
+      {
+        $project: {
+          _id: 1,
+          name: 1,
+          email: 1,
           totalDays: 1,
           presentCount: 1,
           lateCount: 1,
           halfDayCount: 1,
           absentCount: 1,
-          avgHours: { $round: ['$avgHours', 2] }
+          avgHours: { $ifNull: [{ $round: ['$avgHours', 2] }, 0.0] }
         }
       }
     ];
 
-    return db.collection(COLLECTION_NAME).aggregate(pipeline).toArray();
+    return db.collection('users').aggregate(pipeline).toArray();
   },
 
   /**
