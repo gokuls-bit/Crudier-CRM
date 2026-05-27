@@ -11,6 +11,7 @@ const morgan = require('morgan');
 const helmet = require('helmet');
 const cors = require('cors');
 const cookieParser = require('cookie-parser');
+const compression = require('compression');
 
 const env = require('./config/env');
 const corsOptions = require('./config/corsOptions');
@@ -18,6 +19,11 @@ const { globalRateLimiter } = require('./src/middlewares/rateLimiter.middleware'
 const apiV1Router = require('./src/routes');
 const errorMiddleware = require('./src/middlewares/error.middleware');
 const ApiError = require('./src/utils/apiError');
+
+// Observability and safety middlewares
+const requestLogger = require('./src/middlewares/requestLogger.middleware');
+const sanitize = require('./src/middlewares/sanitize.middleware');
+const timeout = require('./src/middlewares/timeout.middleware');
 
 const fs = require('fs');
 const path = require('path');
@@ -30,28 +36,38 @@ if (!fs.existsSync(logDir)) {
   fs.mkdirSync(logDir, { recursive: true });
 }
 
-// ── 1. HTTP logger (writes to logs/access.log + console in dev) ──────────
+// ── 0. Request Timeout (Applied first to catch hanging connections) ──
+app.use(timeout(15000));
+
+// ── 1. HTTP logger (writes to logs/access.log + Winston integration) ──
 const accessLogStream = fs.createWriteStream(path.join(logDir, 'access.log'), { flags: 'a' });
 app.use(morgan('combined', { stream: accessLogStream }));
 
 if (env.nodeEnv !== 'production') {
   app.use(morgan('dev')); // double-log to console in dev mode
 }
+app.use(requestLogger); // Custom request logging metrics to Winston
 
-// ── 2. Helmet security headers ──────────────────────────────
+// ── 2. Compression (Gzip response payloads) ───────────────────
+app.use(compression());
+
+// ── 3. Helmet security headers ──────────────────────────────
 app.use(helmet());
 
-// ── 3. CORS ─────────────────────────────────────────────────
+// ── 4. CORS ─────────────────────────────────────────────────
 app.use(cors(corsOptions));
 
-// ── 4. Body parsers ─────────────────────────────────────────
+// ── 5. Body parsers ─────────────────────────────────────────
 app.use(express.json({ limit: '10mb' }));
 app.use(express.urlencoded({ extended: true, limit: '10mb' }));
 
-// ── 5. Cookie Parser ────────────────────────────────────────
+// ── 6. Body sanitization (Prevent NoSQL injection & XSS) ──────
+app.use(sanitize);
+
+// ── 7. Cookie Parser ────────────────────────────────────────
 app.use(cookieParser());
 
-// ── 6. Global Rate Limiter ──────────────────────────────────
+// ── 8. Global Rate Limiter ──────────────────────────────────
 app.use(globalRateLimiter);
 
 // Static uploads folder

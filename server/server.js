@@ -32,6 +32,10 @@ const startServer = async () => {
     const server = http.createServer(app);
     initSocketIO(server);
 
+    // Start background cron jobs
+    const initCronJobs = require('./src/cron/cron.init');
+    initCronJobs();
+
     // 4. Listen
     server.listen(env.port, () => {
       console.log('');

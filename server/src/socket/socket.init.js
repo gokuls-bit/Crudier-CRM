@@ -27,6 +27,10 @@ const initSocketIO = (httpServer) => {
   // Keep a reference in global scope for trigger events inside services
   global.io = io;
 
+  // Initialize clustering sync via Redis pub/sub
+  const { initSocketRedis } = require('./socket.redis');
+  initSocketRedis(io);
+
   // ── Authentication Middleware ────────────────────────────
   io.use((socket, next) => {
     // Look for token in handshake query or auth object
