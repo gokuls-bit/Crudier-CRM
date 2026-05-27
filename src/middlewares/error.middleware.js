@@ -19,7 +19,20 @@ const errorMiddleware = (err, req, res, next) => {
     responseData.stack = err.stack;
   }
 
-  // Log error message
+  const fs = require('fs');
+  const path = require('path');
+  const logDir = path.join(__dirname, '../../logs');
+  if (!fs.existsSync(logDir)) {
+    fs.mkdirSync(logDir, { recursive: true });
+  }
+  const errorLogStream = fs.createWriteStream(path.join(logDir, 'error.log'), { flags: 'a' });
+
+  // Log error message to file
+  const timestamp = new Date().toISOString();
+  const logMessage = `[${timestamp}] [Error] ${err.statusCode} - ${message}\n${err.stack || ''}\n\n`;
+  errorLogStream.write(logMessage);
+
+  // Log error message to console
   console.error(`[Error] ${err.statusCode} - ${message}`);
   if (env.nodeEnv === 'development' && err.stack) {
     console.error(err.stack);

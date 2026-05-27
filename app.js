@@ -19,10 +19,24 @@ const apiV1Router = require('./src/routes');
 const errorMiddleware = require('./src/middlewares/error.middleware');
 const ApiError = require('./src/utils/apiError');
 
+const fs = require('fs');
+const path = require('path');
+
 const app = express();
 
-// ── 1. HTTP logger ──────────────────────────────────────────
-app.use(morgan(env.nodeEnv === 'production' ? 'combined' : 'dev'));
+// Ensure logs directory exists
+const logDir = path.join(__dirname, 'logs');
+if (!fs.existsSync(logDir)) {
+  fs.mkdirSync(logDir, { recursive: true });
+}
+
+// ── 1. HTTP logger (writes to logs/access.log + console in dev) ──────────
+const accessLogStream = fs.createWriteStream(path.join(logDir, 'access.log'), { flags: 'a' });
+app.use(morgan('combined', { stream: accessLogStream }));
+
+if (env.nodeEnv !== 'production') {
+  app.use(morgan('dev')); // double-log to console in dev mode
+}
 
 // ── 2. Helmet security headers ──────────────────────────────
 app.use(helmet());
