@@ -4,7 +4,7 @@ import api from '../../config/api.config';
 import { useToastStore } from '../../store/toast.store';
 import PageHeader from '../../components/layout/PageHeader';
 import Button from '../../components/ui/Button';
-import { ArrowLeft, BookOpen, ThumbsUp, ThumbsDown, Eye, Clock, GitCompare } from '@phosphor-icons/react';
+import { ArrowLeft, BookOpen, ThumbsUp, ThumbsDown, Eye, Clock, GitDiff } from '@phosphor-icons/react';
 
 export const ArticleReader = () => {
   const { cat, slug } = useParams();
