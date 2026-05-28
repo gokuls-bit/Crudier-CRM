@@ -8,9 +8,21 @@ export const useAuth = () => {
     store.setLoading(true);
     try {
       const response = await authService.login(email, password);
-      const { user, token } = response.data;
-      store.setAuth(user, token);
-      return user;
+      const resData = response.data;
+      // Support both structured { success, message, data } and raw responses
+      const payload = resData?.data !== undefined ? resData.data : resData;
+      
+      if (payload && payload.mfaRequired) {
+        return { mfaRequired: true, tempToken: payload.tempToken };
+      }
+
+      const user = payload?.user;
+      const token = payload?.accessToken || payload?.token;
+      
+      if (user && token) {
+        store.setAuth(user, token);
+      }
+      return user || payload;
     } catch (err) {
       const msg = err.response?.data?.message || 'Login failed';
       store.setError(msg);
@@ -24,8 +36,15 @@ export const useAuth = () => {
     store.setLoading(true);
     try {
       const response = await authService.register(name, email, password, role);
-      const { user, token } = response.data;
-      store.setAuth(user, token);
+      const resData = response.data;
+      const payload = resData?.data !== undefined ? resData.data : resData;
+      
+      const user = payload?.user || payload;
+      const token = payload?.accessToken || payload?.token;
+      
+      if (user && token) {
+        store.setAuth(user, token);
+      }
       return user;
     } catch (err) {
       const msg = err.response?.data?.message || 'Registration failed';

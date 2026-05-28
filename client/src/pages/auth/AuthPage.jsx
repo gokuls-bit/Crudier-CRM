@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from 'react';
-import { useNavigate, useSearchParams } from 'react-router-dom';
+import { useNavigate, useSearchParams, Link } from 'react-router-dom';
 import { useAuth } from '../../hooks/useAuth';
 import { useToastStore } from '../../store/toast.store';
 import { routePaths } from '../../routes/routePaths';
@@ -320,7 +320,6 @@ export const AuthPage = ({ initialTab = 'signin' }) => {
             <button
               onClick={() => {
                 setTab('signin');
-                setFormError('');
               }}
               className={`flex-1 text-center py-2 text-xs font-bold rounded-lg transition-all z-10 ${
                 tab === 'signin' ? 'text-white' : 'text-slate-500'
@@ -331,7 +330,6 @@ export const AuthPage = ({ initialTab = 'signin' }) => {
             <button
               onClick={() => {
                 setTab('signup');
-                setFormError('');
               }}
               className={`flex-1 text-center py-2 text-xs font-bold rounded-lg transition-all z-10 ${
                 tab === 'signup' ? 'text-white' : 'text-slate-500'
