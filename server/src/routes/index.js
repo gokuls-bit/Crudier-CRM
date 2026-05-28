@@ -22,6 +22,7 @@ const salesRoutes = require('../modules/sales/sales.routes');
 const adminRoutes = require('./admin.routes');
 const analyticsRoutes = require('./analytics.routes');
 const exportRoutes = require('./export.routes');
+const servicenowRoutes = require('../modules/servicenow/servicenow.routes');
 
 const router = Router();
 
