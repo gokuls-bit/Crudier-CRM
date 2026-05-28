@@ -100,4 +100,80 @@
   ::-webkit-scrollbar-thumb:hover {
     background: #00A9CE;
   }
+
+  /* Salesforce Lightning Design System (SLDS) Styles */
+  .salesforce-theme {
+    font-family: 'DM Sans', -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Helvetica, Arial, sans-serif !important;
+    font-size: 14px;
+  }
+
+  .salesforce-theme h1,
+  .salesforce-theme h2,
+  .salesforce-theme h3,
+  .salesforce-theme h4,
+  .salesforce-theme h5,
+  .salesforce-theme h6 {
+    font-family: 'DM Sans', sans-serif !important;
+    font-weight: 600;
+  }
+
+  /* Record Cards with 4px top accent border */
+  .slds-card {
+    background: #FFFFFF;
+    border: 1px solid #E5E5E5;
+    border-radius: 4px;
+    box-shadow: 0 2px 2px 0 rgba(0, 0, 0, 0.05);
+    @apply transition-all duration-200;
+  }
+
+  .slds-card-lead {
+    border-top: 4px solid #0176D3 !important;
+  }
+
+  .slds-card-won {
+    border-top: 4px solid #2E844A !important;
+  }
+
+  .slds-card-opp {
+    border-top: 4px solid #FE9339 !important;
+  }
+
+  .slds-card-overdue {
+    border-top: 4px solid #BA0517 !important;
+  }
+
+  /* Highlights Panel */
+  .slds-highlights {
+    background: #F3F3F3;
+    border: 1px solid #E5E5E5;
+    border-radius: 4px;
+  }
+
+  /* Timeline indicators */
+  .slds-timeline-icon {
+    background-color: #B0D9FA;
+    color: #032D60;
+  }
+
+  .slds-text-blue {
+    color: #0176D3;
+  }
+
+  .slds-bg-blue {
+    background-color: #0176D3;
+  }
+
+  .slds-btn-primary {
+    background-color: #0176D3;
+    color: #FFFFFF;
+    @apply hover:bg-[#015ba1] font-semibold rounded px-4 py-2 transition-colors;
+  }
+
+  .slds-btn-secondary {
+    background-color: #FFFFFF;
+    color: #0176D3;
+    border: 1px solid #0176D3;
+    @apply hover:bg-[#B0D9FA]/10 font-semibold rounded px-4 py-2 transition-colors;
+  }
 }
+

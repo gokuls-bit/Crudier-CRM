@@ -75,6 +75,18 @@ export const routePaths = {
   SALES_PIPELINE: '/sales/pipeline',
   SALES_ANALYTICS: '/sales/analytics',
   SALES_FOLLOWUPS: '/sales/followups',
+  SALES_ACCOUNTS: '/sales/accounts',
+  SALES_ACCOUNT_DETAIL: '/sales/accounts/:id',
+  SALES_CONTACTS: '/sales/contacts',
+  SALES_CONTACT_DETAIL: '/sales/contacts/:id',
+  SALES_OPPORTUNITIES: '/sales/opportunities',
+  SALES_OPPORTUNITY_DETAIL: '/sales/opportunities/:id',
+  SALES_FORECASTING: '/sales/forecasting',
+  SALES_CASES: '/sales/cases',
+  SALES_CASE_DETAIL: '/sales/cases/:id',
+  SALES_PRODUCTS: '/sales/products',
+  SALES_TERRITORIES: '/sales/territories',
+  SALES_EMAILS: '/sales/emails',
 
   // Intern
   INTERN_DASHBOARD: '/intern/dashboard',
