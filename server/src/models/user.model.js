@@ -28,9 +28,9 @@ const userSchema = new mongoose.Schema(
     },
     password: {
       type: String,
-      required: [true, 'Password is required'],
+      required: false, // Optional for OAuth sign-ups
       minlength: [6, 'Password must be at least 6 characters'],
-      select: false, // Don't return password by default in queries
+      select: false,
     },
     role: {
       type: String,
@@ -55,6 +55,119 @@ const userSchema = new mongoose.Schema(
       type: Boolean,
       default: false,
       select: false,
+    },
+    // Clerk-inspired Extensions
+    authProviders: {
+      type: [
+        {
+          provider: String,
+          providerId: String,
+          accessToken: String, // Encrypted
+          connectedAt: {
+            type: Date,
+            default: Date.now,
+          },
+        },
+      ],
+      default: [],
+    },
+    twoFactorEnabled: {
+      type: Boolean,
+      default: false,
+    },
+    twoFactorSecret: {
+      type: String, // AES-256 Encrypted TOTP
+      default: null,
+    },
+    twoFactorBackupCodes: {
+      type: [String],
+      default: [],
+    },
+    emailVerified: {
+      type: Boolean,
+      default: false,
+    },
+    emailVerificationToken: {
+      type: String,
+      default: null,
+    },
+    emailVerificationExpiry: {
+      type: Date,
+      default: null,
+    },
+    loginHistory: {
+      type: [
+        {
+          ip: String,
+          userAgent: String,
+          timestamp: {
+            type: Date,
+            default: Date.now,
+          },
+          provider: String,
+        },
+      ],
+      default: [],
+    },
+    failedLoginAttempts: {
+      type: Number,
+      default: 0,
+    },
+    lockedUntil: {
+      type: Date,
+      default: null,
+    },
+    activeSessions: {
+      type: [
+        {
+          sessionId: String,
+          device: String,
+          browser: String,
+          ip: String,
+          location: String,
+          lastActive: {
+            type: Date,
+            default: Date.now,
+          },
+        },
+      ],
+      default: [],
+    },
+    developerProfiles: {
+      github: {
+        username: String,
+        stars: Number,
+        repos: Number,
+        syncedAt: Date,
+      },
+      leetcode: {
+        username: String,
+        solved: Number,
+        rating: Number,
+        syncedAt: Date,
+      },
+      hackerrank: {
+        username: String,
+        badges: [String],
+        syncedAt: Date,
+      },
+      codeforces: {
+        username: String,
+        rating: Number,
+        rank: String,
+        syncedAt: Date,
+      },
+      codechef: {
+        username: String,
+        rating: Number,
+        stars: Number,
+        syncedAt: Date,
+      },
+      stackoverflow: {
+        username: String,
+        reputation: Number,
+        syncedAt: Date,
+      },
     },
   },
   {
