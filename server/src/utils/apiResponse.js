@@ -19,10 +19,16 @@ class ApiResponse {
   }
 
   static success(res, message, data = null, statusCode = 200) {
+    if (typeof res === 'string') {
+      return new ApiResponse(true, res, message);
+    }
     return res.status(statusCode).json(new ApiResponse(true, message, data));
   }
 
   static error(res, message, statusCode = 500, data = null) {
+    if (typeof res === 'string') {
+      return new ApiResponse(false, res, message);
+    }
     return res.status(statusCode).json(new ApiResponse(false, message, data));
   }
 }
