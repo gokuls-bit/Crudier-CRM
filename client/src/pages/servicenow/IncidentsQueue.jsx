@@ -93,7 +93,7 @@ export const IncidentsQueue = () => {
             <span className="text-[10px] font-bold text-slate-400 uppercase">P1 Critical Outages</span>
             <span className="text-xl font-bold font-Outfit mt-1 text-rose-600">1 Incident</span>
           </div>
-          <ShieldAlert className="w-8 h-8 text-rose-500 opacity-60" />
+          <Warning className="w-8 h-8 text-rose-500 opacity-60" />
         </div>
 
         <div className="bg-white border border-[#E0E3E8] p-4 rounded-xl shadow-sm text-left flex items-center justify-between">
