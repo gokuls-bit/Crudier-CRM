@@ -1,6 +1,6 @@
 /**
  * ============================================================
- * Crudier CRM — Auth Routes
+ * Crudier CRM — Auth Routes (Clerk Upgrade)
  * ============================================================
  */
 
@@ -28,12 +28,32 @@ const loginValidation = validate({
   },
 });
 
-// Routes
+// Primary Credentials routes
 router.post('/register', registerValidation, asyncWrapper(authController.register));
 router.post('/login', loginValidation, asyncWrapper(authController.login));
 router.post('/logout', asyncWrapper(authController.logout));
 router.post('/refresh-token', asyncWrapper(authController.refresh));
-router.post('/refresh', asyncWrapper(authController.refresh)); // duplicate to support both naming styles
+router.post('/refresh', asyncWrapper(authController.refresh)); // duplicate to support both styles
 router.get('/me', protectRoute, asyncWrapper(authController.me));
+
+// OAuth Simulator routes
+router.get('/oauth/:provider', asyncWrapper(authController.oauthInitiate));
+router.get('/oauth/:provider/callback', asyncWrapper(authController.oauthCallback));
+router.post('/oauth/link/:provider', protectRoute, asyncWrapper(authController.linkOAuth));
+router.delete('/oauth/unlink/:provider', protectRoute, asyncWrapper(authController.unlinkOAuth));
+
+// Multi-Factor Authentication (2FA) routes
+router.post('/2fa/setup', protectRoute, asyncWrapper(authController.setup2FA));
+router.post('/2fa/verify', protectRoute, asyncWrapper(authController.verify2FA));
+router.post('/2fa/validate', asyncWrapper(authController.validate2FA));
+router.post('/2fa/backup-codes', protectRoute, asyncWrapper(authController.regenerateBackupCodes));
+
+// Session Management routes
+router.get('/sessions', protectRoute, asyncWrapper(authController.getSessions));
+router.delete('/sessions/:id', protectRoute, asyncWrapper(authController.revokeSession));
+
+// Developer Profiles coding stats routes
+router.get('/developer-profiles', protectRoute, asyncWrapper(authController.getDeveloperProfiles));
+router.post('/developer-profiles/sync', protectRoute, asyncWrapper(authController.syncDeveloperProfiles));
 
 module.exports = router;
