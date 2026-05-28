@@ -164,6 +164,23 @@ const AppRouter = () => {
             <Route path={routePaths.SETTINGS} element={<SettingsPage />} />
             <Route path={routePaths.SECURITY_SETTINGS} element={<SecuritySettingsPage />} />
             <Route path={routePaths.TWO_FACTOR_SETUP} element={<TwoFactorSetupPage />} />
+            <Route path={routePaths.SEARCH} element={<SearchResultsPage />} />
+
+            {/* ServiceNow Modules */}
+            <Route path="/workspace/workflows" element={<WorkflowBuilder />} />
+            <Route path="/workspace/forms" element={<FormBuilder />} />
+            <Route path="/sla" element={<SLADashboard />} />
+            <Route path="/approvals" element={<ApprovalsInbox />} />
+            <Route path="/incidents" element={<IncidentsQueue />} />
+            <Route path="/incidents/:id" element={<IncidentDetail />} />
+            <Route path="/knowledge" element={<KnowledgeBase />} />
+            <Route path="/knowledge/:cat/:slug" element={<ArticleReader />} />
+            <Route path="/changes" element={<ChangeBoard />} />
+            <Route path="/catalog" element={<ServiceCatalog />} />
+            <Route path="/catalog/:item" element={<ServiceCatalog />} />
+            <Route path="/reports" element={<ReportsBuilder />} />
+            <Route path="/reports/dashboard" element={<ReportsDashboard />} />
+            <Route path="/audit" element={<AuditLogPage />} />
 
             {/* Executive Dashboard Guard */}
             <Route element={<RoleRoute allowedRoles={[ROLES.CEO, ROLES.MD, ROLES.COO, ROLES.FOUNDER, ROLES.ADMIN]} />}>
