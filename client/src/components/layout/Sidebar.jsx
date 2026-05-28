@@ -6,7 +6,8 @@ import { useUiStore } from '../../store/ui.store';
 import { 
   House, GitMerge, AppWindow, Alarm, CheckSquareOffset, Warning, 
   BookOpen, GitBranch, ShoppingBag, ChartBar, Shield, CaretLeft, CaretRight,
-  MagnifyingGlass, FolderSimple, FolderSimplePlus, FileText
+  MagnifyingGlass, FolderSimple, FolderSimplePlus, FileText,
+  Users, Target, Tag, MapPin, Envelope, Lifebuoy, Briefcase
 } from '@phosphor-icons/react';
 import clsx from 'clsx';
 
@@ -77,6 +78,22 @@ export const Sidebar = () => {
       links: [
         { path: '/reports', label: 'Report Builder', icon: ChartBar },
         { path: '/reports/dashboard', label: 'Custom Dashboard', icon: FolderSimplePlus },
+      ]
+    },
+    {
+      id: 'salesforce',
+      label: 'Salesforce CRM',
+      icon: Briefcase,
+      links: [
+        { path: '/sales/dashboard', label: 'Sales Dashboard', icon: ChartBar },
+        { path: '/sales/accounts', label: 'Accounts', icon: House },
+        { path: '/sales/contacts', label: 'Contacts', icon: Users },
+        { path: '/sales/opportunities', label: 'Opportunities', icon: Target },
+        { path: '/sales/forecasting', label: 'Forecasting', icon: Target },
+        { path: '/sales/cases', label: 'Cases (Tickets)', icon: Warning },
+        { path: '/sales/products', label: 'Products & Books', icon: Tag },
+        { path: '/sales/territories', label: 'Territories', icon: MapPin },
+        { path: '/sales/emails', label: 'Emails Center', icon: Envelope },
       ]
     },
     {

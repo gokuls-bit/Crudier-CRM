@@ -99,6 +99,18 @@ import LeadDetail from '../pages/sales/LeadDetail';
 import PipelineKanban from '../pages/sales/PipelineKanban';
 import SalesAnalytics from '../pages/sales/SalesAnalytics';
 import FollowUps from '../pages/sales/FollowUps';
+import AccountsList from '../pages/sales/AccountsList';
+import AccountDetail from '../pages/sales/AccountDetail';
+import ContactsList from '../pages/sales/ContactsList';
+import ContactDetail from '../pages/sales/ContactDetail';
+import OpportunitiesList from '../pages/sales/OpportunitiesList';
+import OpportunityDetail from '../pages/sales/OpportunityDetail';
+import ForecastingBoard from '../pages/sales/ForecastingBoard';
+import CasesList from '../pages/sales/CasesList';
+import CaseDetail from '../pages/sales/CaseDetail';
+import ProductsPriceBooks from '../pages/sales/ProductsPriceBooks';
+import TerritoryBoard from '../pages/sales/TerritoryBoard';
+import EmailHub from '../pages/sales/EmailHub';
 
 // Intern Pages
 import InternDashboard from '../pages/intern/InternDashboard';
@@ -253,6 +265,18 @@ const AppRouter = () => {
               <Route path={routePaths.SALES_PIPELINE} element={<PipelineKanban />} />
               <Route path={routePaths.SALES_ANALYTICS} element={<SalesAnalytics />} />
               <Route path={routePaths.SALES_FOLLOWUPS} element={<FollowUps />} />
+              <Route path={routePaths.SALES_ACCOUNTS} element={<AccountsList />} />
+              <Route path={routePaths.SALES_ACCOUNT_DETAIL} element={<AccountDetail />} />
+              <Route path={routePaths.SALES_CONTACTS} element={<ContactsList />} />
+              <Route path={routePaths.SALES_CONTACT_DETAIL} element={<ContactDetail />} />
+              <Route path={routePaths.SALES_OPPORTUNITIES} element={<OpportunitiesList />} />
+              <Route path={routePaths.SALES_OPPORTUNITY_DETAIL} element={<OpportunityDetail />} />
+              <Route path={routePaths.SALES_FORECASTING} element={<ForecastingBoard />} />
+              <Route path={routePaths.SALES_CASES} element={<CasesList />} />
+              <Route path={routePaths.SALES_CASE_DETAIL} element={<CaseDetail />} />
+              <Route path={routePaths.SALES_PRODUCTS} element={<ProductsPriceBooks />} />
+              <Route path={routePaths.SALES_TERRITORIES} element={<TerritoryBoard />} />
+              <Route path={routePaths.SALES_EMAILS} element={<EmailHub />} />
             </Route>
 
             {/* Intern Dashboard Guard */}
