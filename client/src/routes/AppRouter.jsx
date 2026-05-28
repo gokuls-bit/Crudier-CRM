@@ -20,6 +20,7 @@ import MeetingsPage from '../pages/shared/MeetingsPage';
 import NotesPage from '../pages/shared/NotesPage';
 import ChatPage from '../pages/shared/ChatPage';
 import SettingsPage from '../pages/shared/SettingsPage';
+import NotFoundPage from '../pages/shared/NotFoundPage';
 
 // Executive Pages
 import ExecutiveDashboard from '../pages/executive/ExecutiveDashboard';
@@ -221,8 +222,8 @@ const AppRouter = () => {
           </Route>
         </Route>
 
-        {/* Fallback to dashboard */}
-        <Route path="*" element={<Navigate to={routePaths.DASHBOARD} replace />} />
+        {/* Fallback to 404 */}
+        <Route path="*" element={<NotFoundPage />} />
       </Routes>
     </BrowserRouter>
   );
