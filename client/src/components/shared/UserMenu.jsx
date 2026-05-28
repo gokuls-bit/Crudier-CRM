@@ -3,7 +3,7 @@ import { useNavigate } from 'react-router-dom';
 import { useAuth } from '../../hooks/useAuth';
 import { routePaths } from '../../routes/routePaths';
 import Avatar from '../ui/Avatar';
-import { User, Settings, LogOut, ChevronDown } from 'lucide-react';
+import { User, Settings, LogOut, ChevronDown, Shield } from 'lucide-react';
 import clsx from 'clsx';
 
 export const UserMenu = () => {
@@ -72,6 +72,17 @@ export const UserMenu = () => {
           >
             <Settings className="w-4 h-4 text-slate-400" />
             <span>Preferences</span>
+          </button>
+
+          <button
+            onClick={() => {
+              navigate(routePaths.SECURITY_SETTINGS);
+              setIsOpen(false);
+            }}
+            className="w-full text-left px-4 py-2 text-xs text-slate-300 hover:bg-white/5 hover:text-white transition-colors flex items-center gap-2"
+          >
+            <Shield className="w-4 h-4 text-slate-400" />
+            <span>Security Settings</span>
           </button>
 
           <div className="h-px bg-white/5 my-1" />

@@ -12,6 +12,10 @@ import AppShell from '../components/layout/AppShell';
 import LoginPage from '../pages/auth/LoginPage';
 import RegisterPage from '../pages/auth/RegisterPage';
 import UnauthorizedPage from '../pages/auth/UnauthorizedPage';
+import OAuthCallbackPage from '../pages/auth/OAuthCallbackPage';
+import ForgotPasswordPage from '../pages/auth/ForgotPasswordPage';
+import EmailVerificationPage from '../pages/auth/EmailVerificationPage';
+import TwoFactorSetupPage from '../pages/auth/TwoFactorSetupPage';
 
 // Shared Pages
 import ProfilePage from '../pages/shared/ProfilePage';
@@ -20,6 +24,7 @@ import MeetingsPage from '../pages/shared/MeetingsPage';
 import NotesPage from '../pages/shared/NotesPage';
 import ChatPage from '../pages/shared/ChatPage';
 import SettingsPage from '../pages/shared/SettingsPage';
+import SecuritySettingsPage from '../pages/shared/SecuritySettingsPage';
 import NotFoundPage from '../pages/shared/NotFoundPage';
 
 // Executive Pages
