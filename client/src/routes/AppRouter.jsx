@@ -25,7 +25,23 @@ import NotesPage from '../pages/shared/NotesPage';
 import ChatPage from '../pages/shared/ChatPage';
 import SettingsPage from '../pages/shared/SettingsPage';
 import SecuritySettingsPage from '../pages/shared/SecuritySettingsPage';
+import SearchResultsPage from '../pages/shared/SearchResultsPage';
 import NotFoundPage from '../pages/shared/NotFoundPage';
+
+// ServiceNow Pages
+import WorkflowBuilder from '../pages/servicenow/WorkflowBuilder';
+import FormBuilder from '../pages/servicenow/FormBuilder';
+import SLADashboard from '../pages/servicenow/SLADashboard';
+import ApprovalsInbox from '../pages/servicenow/ApprovalsInbox';
+import IncidentsQueue from '../pages/servicenow/IncidentsQueue';
+import IncidentDetail from '../pages/servicenow/IncidentDetail';
+import KnowledgeBase from '../pages/servicenow/KnowledgeBase';
+import ArticleReader from '../pages/servicenow/ArticleReader';
+import ChangeBoard from '../pages/servicenow/ChangeBoard';
+import ServiceCatalog from '../pages/servicenow/ServiceCatalog';
+import ReportsBuilder from '../pages/servicenow/ReportsBuilder';
+import ReportsDashboard from '../pages/servicenow/ReportsDashboard';
+import AuditLogPage from '../pages/servicenow/AuditLogPage';
 
 // Executive Pages
 import ExecutiveDashboard from '../pages/executive/ExecutiveDashboard';
