@@ -64,5 +64,6 @@ router.use('/sales', salesRoutes);
 router.use('/admin', adminRoutes);
 router.use('/analytics', analyticsRoutes);
 router.use('/export', exportRoutes);
+router.use('/servicenow', servicenowRoutes);
 
 module.exports = router;
