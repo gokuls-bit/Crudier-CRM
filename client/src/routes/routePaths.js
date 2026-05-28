@@ -3,6 +3,11 @@ export const routePaths = {
   LOGIN: '/login',
   REGISTER: '/register',
   UNAUTHORIZED: '/unauthorized',
+  OAUTH_CALLBACK: '/oauth/callback',
+  FORGOT_PASSWORD: '/forgot-password',
+  EMAIL_VERIFICATION: '/verify-email',
+  TWO_FACTOR_SETUP: '/two-factor-setup',
+  SECURITY_SETTINGS: '/security',
 
   // Common/Shared Pages (Requires Auth)
   DASHBOARD: '/dashboard', // Dynamic router index to redirect to role-based landing
