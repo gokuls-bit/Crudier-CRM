@@ -5,7 +5,7 @@ import PageHeader from '../../components/layout/PageHeader';
 import Button from '../../components/ui/Button';
 import Input from '../../components/ui/Input';
 import { BarChart, Bar, LineChart, Line, PieChart, Pie, Cell, ResponsiveContainer, XAxis, YAxis, Tooltip, Legend } from 'recharts';
-import { ChartBar, Download, Mail, FloppyDisk, Funnel, Clock } from '@phosphor-icons/react';
+import { ChartBar, Download, Envelope, FloppyDisk, Funnel, Clock } from '@phosphor-icons/react';
 
 export const ReportsBuilder = () => {
   const [reports, setReports] = useState([]);
@@ -313,7 +313,7 @@ export const ReportsBuilder = () => {
               </div>
 
               <Button type="submit" isLoading={scheduling} disabled={scheduling} className="whitespace-nowrap px-4 py-2 bg-[#1C2945] text-white">
-                <Mail className="w-4 h-4 mr-1 inline" /> Schedule Digest
+                <Envelope className="w-4 h-4 mr-1 inline" /> Schedule Digest
               </Button>
             </form>
           </div>
