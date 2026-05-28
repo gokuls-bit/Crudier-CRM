@@ -39,10 +39,31 @@ const authRepository = {
   createUser: async (userData) => {
     const db = getDb();
     const cleanData = {
-      ...userData,
+      name: userData.name ? userData.name.trim() : '',
       email: userData.email.toLowerCase().trim(),
-      isActive: userData.isActive !== undefined ? userData.isActive : true,
+      password: userData.password || null,
+      role: userData.role || 'Developer',
       workspaceId: userData.workspaceId ? new ObjectId(userData.workspaceId) : null,
+      isActive: userData.isActive !== undefined ? userData.isActive : true,
+      authProviders: userData.authProviders || [],
+      twoFactorEnabled: userData.twoFactorEnabled || false,
+      twoFactorSecret: userData.twoFactorSecret || null,
+      twoFactorBackupCodes: userData.twoFactorBackupCodes || [],
+      emailVerified: userData.emailVerified || false,
+      emailVerificationToken: userData.emailVerificationToken || null,
+      emailVerificationExpiry: userData.emailVerificationExpiry || null,
+      loginHistory: userData.loginHistory || [],
+      failedLoginAttempts: userData.failedLoginAttempts || 0,
+      lockedUntil: userData.lockedUntil || null,
+      activeSessions: userData.activeSessions || [],
+      developerProfiles: userData.developerProfiles || {
+        github: null,
+        leetcode: null,
+        hackerrank: null,
+        codeforces: null,
+        codechef: null,
+        stackoverflow: null
+      },
       createdAt: new Date(),
       updatedAt: new Date(),
     };
@@ -134,6 +155,154 @@ const authRepository = {
     const db = getDb();
     const result = await db.collection('refreshTokens').deleteMany({ userId: new ObjectId(userId) });
     return result.deletedCount;
+  },
+
+  /**
+   * Find a user by OAuth provider and provider ID.
+   */
+  findUserByProvider: async (provider, providerId) => {
+    const db = getDb();
+    return db.collection(COLLECTION_NAME).findOne({
+      authProviders: {
+        $elemMatch: { provider, providerId }
+      }
+    });
+  },
+
+  /**
+   * Link an OAuth provider to a user account.
+   */
+  linkProvider: async (userId, providerData) => {
+    if (!ObjectId.isValid(userId)) return false;
+    const db = getDb();
+    const result = await db.collection(COLLECTION_NAME).updateOne(
+      { _id: new ObjectId(userId) },
+      {
+        $push: { authProviders: providerData },
+        $set: { updatedAt: new Date() }
+      }
+    );
+    return result.modifiedCount > 0;
+  },
+
+  /**
+   * Unlink an OAuth provider from a user account.
+   */
+  unlinkProvider: async (userId, provider) => {
+    if (!ObjectId.isValid(userId)) return false;
+    const db = getDb();
+    const result = await db.collection(COLLECTION_NAME).updateOne(
+      { _id: new ObjectId(userId) },
+      {
+        $pull: { authProviders: { provider } },
+        $set: { updatedAt: new Date() }
+      }
+    );
+    return result.modifiedCount > 0;
+  },
+
+  /**
+   * Add active session.
+   */
+  addActiveSession: async (userId, session) => {
+    if (!ObjectId.isValid(userId)) return false;
+    const db = getDb();
+    const result = await db.collection(COLLECTION_NAME).updateOne(
+      { _id: new ObjectId(userId) },
+      {
+        $push: { activeSessions: session },
+        $set: { updatedAt: new Date() }
+      }
+    );
+    return result.modifiedCount > 0;
+  },
+
+  /**
+   * Remove active session.
+   */
+  removeActiveSession: async (userId, sessionId) => {
+    if (!ObjectId.isValid(userId)) return false;
+    const db = getDb();
+    const result = await db.collection(COLLECTION_NAME).updateOne(
+      { _id: new ObjectId(userId) },
+      {
+        $pull: { activeSessions: { sessionId } },
+        $set: { updatedAt: new Date() }
+      }
+    );
+    return result.modifiedCount > 0;
+  },
+
+  /**
+   * Update active session timestamp.
+   */
+  updateSessionActivity: async (userId, sessionId) => {
+    if (!ObjectId.isValid(userId)) return false;
+    const db = getDb();
+    const result = await db.collection(COLLECTION_NAME).updateOne(
+      { _id: new ObjectId(userId), 'activeSessions.sessionId': sessionId },
+      {
+        $set: {
+          'activeSessions.$.lastActive': new Date(),
+          updatedAt: new Date()
+        }
+      }
+    );
+    return result.modifiedCount > 0;
+  },
+
+  /**
+   * Log login attempts.
+   */
+  incrementFailedAttempts: async (userId, lockedUntil) => {
+    if (!ObjectId.isValid(userId)) return false;
+    const db = getDb();
+    const result = await db.collection(COLLECTION_NAME).updateOne(
+      { _id: new ObjectId(userId) },
+      {
+        $inc: { failedLoginAttempts: 1 },
+        $set: {
+          lockedUntil,
+          updatedAt: new Date()
+        }
+      }
+    );
+    return result.modifiedCount > 0;
+  },
+
+  /**
+   * Reset failed attempts.
+   */
+  resetFailedAttempts: async (userId) => {
+    if (!ObjectId.isValid(userId)) return false;
+    const db = getDb();
+    const result = await db.collection(COLLECTION_NAME).updateOne(
+      { _id: new ObjectId(userId) },
+      {
+        $set: {
+          failedLoginAttempts: 0,
+          lockedUntil: null,
+          updatedAt: new Date()
+        }
+      }
+    );
+    return result.modifiedCount > 0;
+  },
+
+  /**
+   * Add login history entry.
+   */
+  addLoginHistory: async (userId, entry) => {
+    if (!ObjectId.isValid(userId)) return false;
+    const db = getDb();
+    const result = await db.collection(COLLECTION_NAME).updateOne(
+      { _id: new ObjectId(userId) },
+      {
+        $push: { loginHistory: entry },
+        $set: { updatedAt: new Date() }
+      }
+    );
+    return result.modifiedCount > 0;
   },
 };
 
