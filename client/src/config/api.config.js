@@ -22,8 +22,6 @@ api.interceptors.request.use(
   (error) => Promise.reject(error)
 );
 
-import { useAuthStore } from '../store/auth.store';
-
 // Response Interceptor: Handle Unauthorized & Token Refresh
 api.interceptors.response.use(
   (response) => response,

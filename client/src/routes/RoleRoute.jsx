@@ -1,15 +1,14 @@
 import React from 'react';
 import { Navigate, Outlet } from 'react-router-dom';
 import { hasPermission } from '../config/roles.config';
+import { useAuthStore } from '../store/auth.store';
 
 const RoleRoute = ({ allowedRoles }) => {
-  const userString = localStorage.getItem('crudier_user');
+  const user = useAuthStore((state) => state.user);
   
-  if (!userString) {
+  if (!user) {
     return <Navigate to="/login" replace />;
   }
-
-  const user = JSON.parse(userString);
 
   if (!hasPermission(user.role, allowedRoles)) {
     return <Navigate to="/unauthorized" replace />;

@@ -1,10 +1,10 @@
 import React from 'react';
 import { Navigate, Outlet } from 'react-router-dom';
 
+import { useAuthStore } from '../store/auth.store';
+
 const ProtectedRoute = () => {
-  // Check auth status from localStorage or store
-  const token = localStorage.getItem('crudier_token');
-  const user = localStorage.getItem('crudier_user');
+  const { token, user } = useAuthStore();
 
   if (!token || !user) {
     return <Navigate to="/login" replace />;
