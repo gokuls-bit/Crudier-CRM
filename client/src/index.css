@@ -4,67 +4,100 @@
 
 @layer base {
   body {
-    font-family: 'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Oxygen, Ubuntu, Cantarell, sans-serif;
-    @apply bg-[#0b0f19] text-[#f3f4f6] min-h-screen overflow-x-hidden;
+    font-family: 'Source Sans 3', 'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Oxygen, Ubuntu, Cantarell, sans-serif;
+    @apply bg-[#F4F5F7] text-[#1C2945] min-h-screen overflow-x-hidden;
   }
 
   h1, h2, h3, h4, h5, h6 {
-    font-family: 'Outfit', sans-serif;
+    font-family: 'Source Sans 3', 'Outfit', sans-serif;
+    font-weight: 600;
+  }
+
+  /* Dense data tables custom font */
+  table {
+    font-family: 'Source Serif 4', Georgia, Cambria, "Times New Roman", Times, serif;
   }
 }
 
 @layer utilities {
-  /* Premium Glassmorphic Styles */
-  .glass-panel {
-    background: rgba(17, 24, 39, 0.45);
-    backdrop-filter: blur(16px) saturate(120%);
-    -webkit-backdrop-filter: blur(16px) saturate(120%);
-    border: 1px solid rgba(255, 255, 255, 0.08);
+  /* ServiceNow Enterprise Palette Utilities */
+  .sn-navbar {
+    background-color: #1C2945;
+    color: #FFFFFF;
   }
 
-  .glass-card {
-    background: rgba(30, 41, 59, 0.35);
-    backdrop-filter: blur(12px);
-    -webkit-backdrop-filter: blur(12px);
-    border: 1px solid rgba(255, 255, 255, 0.06);
-    transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+  .sn-surface {
+    background-color: #FFFFFF;
+    border: 1px solid #E0E3E8;
   }
 
-  .glass-card:hover {
-    background: rgba(30, 41, 59, 0.45);
-    border-color: rgba(139, 92, 246, 0.25);
-    box-shadow: 0 10px 30px -10px rgba(139, 92, 246, 0.15);
+  .sn-bg-light {
+    background-color: #F4F5F7;
   }
 
-  .glass-input {
-    background: rgba(15, 23, 42, 0.5);
-    border: 1px solid rgba(255, 255, 255, 0.1);
-    color: #f3f4f6;
-    transition: all 0.2s ease-in-out;
+  .sn-accent-teal {
+    color: #00A9CE;
   }
 
-  .glass-input:focus {
-    border-color: rgba(139, 92, 246, 0.6);
-    box-shadow: 0 0 0 2px rgba(139, 92, 246, 0.2);
-    outline: none;
+  .sn-border-grey {
+    border-color: #E0E3E8;
   }
 
-  /* Custom Premium Scrollbar */
+  /* Density Mode Classes */
+  /* Comfortable Mode */
+  .density-comfortable .sn-table-row {
+    @apply py-3 px-4 text-sm;
+  }
+  .density-comfortable .sn-card {
+    @apply p-6 gap-4;
+  }
+  .density-comfortable .sn-header {
+    @apply py-4 px-6;
+  }
+
+  /* Default Mode */
+  .density-default .sn-table-row {
+    @apply py-2 px-3 text-xs;
+  }
+  .density-default .sn-card {
+    @apply p-4 gap-3;
+  }
+  .density-default .sn-header {
+    @apply py-3 px-4;
+  }
+
+  /* Compact Mode */
+  .density-compact .sn-table-row {
+    @apply py-1 px-2 text-[11px] leading-tight;
+  }
+  .density-compact .sn-card {
+    @apply p-2.5 gap-2;
+  }
+  .density-compact .sn-header {
+    @apply py-2 px-3;
+  }
+  .density-compact input, 
+  .density-compact select, 
+  .density-compact button {
+    @apply py-1 px-2 text-[11px] h-8;
+  }
+
+  /* Custom enterprise scrollbar */
   ::-webkit-scrollbar {
     width: 6px;
     height: 6px;
   }
 
   ::-webkit-scrollbar-track {
-    background: #0b0f19;
+    background: #F4F5F7;
   }
 
   ::-webkit-scrollbar-thumb {
-    background: rgba(255, 255, 255, 0.1);
-    border-radius: 9999px;
+    background: #C4C9D3;
+    border-radius: 3px;
   }
 
   ::-webkit-scrollbar-thumb:hover {
-    background: rgba(139, 92, 246, 0.4);
+    background: #00A9CE;
   }
 }
