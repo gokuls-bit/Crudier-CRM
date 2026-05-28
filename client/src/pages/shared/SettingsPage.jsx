@@ -1,11 +1,14 @@
 import React from 'react';
+import { useNavigate } from 'react-router-dom';
 import PageHeader from '../../components/layout/PageHeader';
 import Button from '../../components/ui/Button';
 import { useUiStore } from '../../store/ui.store';
-import { Moon, Sun } from 'lucide-react';
+import { routePaths } from '../../routes/routePaths';
+import { Moon, Sun, Shield } from 'lucide-react';
 
 export const SettingsPage = () => {
   const { isDarkMode, toggleTheme } = useUiStore();
+  const navigate = useNavigate();
 
   return (
     <div className="flex flex-col gap-6 max-w-2xl">
@@ -40,7 +43,7 @@ export const SettingsPage = () => {
         </div>
 
         {/* Notifications config */}
-        <div className="flex items-center justify-between">
+        <div className="flex items-center justify-between border-b border-white/5 pb-4">
           <div className="flex flex-col gap-1">
             <span className="text-sm font-bold text-slate-200 Outfit">Push Alerts Notification</span>
             <span className="text-xs text-slate-500">Receive system broadcasts and scrum reminders</span>
@@ -49,9 +52,25 @@ export const SettingsPage = () => {
             Configure Settings
           </Button>
         </div>
+
+        {/* Account Security Gating */}
+        <div className="flex items-center justify-between">
+          <div className="flex flex-col gap-1">
+            <span className="text-sm font-bold text-slate-200 Outfit">Account Security & MFA</span>
+            <span className="text-xs text-slate-500">Manage 2FA, active sessions, and social connections</span>
+          </div>
+          <Button 
+            variant="secondary" 
+            size="sm" 
+            onClick={() => navigate(routePaths.SECURITY_SETTINGS)}
+            className="flex items-center gap-1.5"
+          >
+            <Shield className="w-4 h-4" />
+            <span>Manage Security</span>
+          </Button>
+        </div>
       </div>
     </div>
   );
 };
 export default SettingsPage;
-// Make sure to export default as well!
