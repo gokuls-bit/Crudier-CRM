@@ -2,6 +2,8 @@ import React, { useState } from 'react';
 import { useNavigate, Link } from 'react-router-dom';
 import { useAuth } from '../../hooks/useAuth';
 import { routePaths } from '../../routes/routePaths';
+import { useToastStore } from '../../store/toast.store';
+import { useAuthStore } from '../../store/auth.store';
 import Input from '../../components/ui/Input';
 import Button from '../../components/ui/Button';
 
@@ -10,33 +12,117 @@ export const RegisterPage = () => {
   const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
   const [role, setRole] = useState('Developer');
-  const [errorMsg, setErrorMsg] = useState('');
+  
+  // Validation States
+  const [nameError, setNameError] = useState('');
+  const [emailError, setEmailError] = useState('');
+  const [passwordError, setPasswordError] = useState('');
+  const [formError, setFormError] = useState('');
+
   const { register, loading } = useAuth();
+  const addToast = useToastStore((state) => state.addToast);
   const navigate = useNavigate();
+
+  // Name validation
+  const handleNameChange = (val) => {
+    setName(val);
+    if (!val.trim()) {
+      setNameError('Full name is required.');
+    } else {
+      setNameError('');
+    }
+  };
+
+  const handleNameBlur = () => {
+    if (!name.trim()) {
+      setNameError('Full name is required.');
+    }
+  };
+
+  // Email validation
+  const handleEmailChange = (val) => {
+    setEmail(val);
+    if (!val) {
+      setEmailError('Email address is required.');
+    } else if (!/^\S+@\S+\.\S+$/.test(val)) {
+      setEmailError('Please enter a valid email address.');
+    } else {
+      setEmailError('');
+    }
+  };
+
+  const handleEmailBlur = () => {
+    if (!email) {
+      setEmailError('Email address is required.');
+    }
+  };
+
+  // Password validation
+  const handlePasswordChange = (val) => {
+    setPassword(val);
+    if (!val) {
+      setPasswordError('Password is required.');
+    } else if (val.length < 6) {
+      setPasswordError('Password must be at least 6 characters long.');
+    } else {
+      setPasswordError('');
+    }
+  };
+
+  const handlePasswordBlur = () => {
+    if (!password) {
+      setPasswordError('Password is required.');
+    }
+  };
 
   const handleSubmit = async (e) => {
     e.preventDefault();
-    setErrorMsg('');
+    setFormError('');
+
+    // Final checks
+    const isNameValid = name.trim().length > 0;
+    const isEmailValid = /^\S+@\S+\.\S+$/.test(email);
+    const isPasswordValid = password.length >= 6;
+
+    if (!isNameValid) {
+      setNameError('Full name is required.');
+      return;
+    }
+    if (!isEmailValid) {
+      setEmailError('Please enter a valid email address.');
+      return;
+    }
+    if (!isPasswordValid) {
+      setPasswordError('Password must be at least 6 characters long.');
+      return;
+    }
+
     try {
       await register(name, email, password, role);
+      addToast('Workspace account created successfully!', 'success');
       navigate(routePaths.DASHBOARD);
     } catch (err) {
       // Mock Fallback: if server is down, allow registration bypass for visual previewing
-      if (name && email && password) {
+      if (name && email && password && !nameError && !emailError && !passwordError) {
         const mockUser = {
           _id: 'mock_user_id_123',
           name,
           email,
           role,
         };
-        localStorage.setItem('crudier_user', JSON.stringify(mockUser));
-        localStorage.setItem('crudier_token', 'mock_jwt_token');
-        window.location.href = routePaths.DASHBOARD;
+        useAuthStore.getState().setAuth(mockUser, 'mock_jwt_token');
+        addToast('Bypassed registration for previewing.', 'warning');
+        navigate(routePaths.DASHBOARD);
       } else {
-        setErrorMsg('Please fill in all details.');
+        const message = err.message || 'Registration failed. Please check your workspace configuration.';
+        setFormError(message);
+        addToast(message, 'error');
       }
     }
   };
+
+  // Check form validity
+  const isFormValid = name.trim() && email && password && !nameError && !emailError && !passwordError;
 
   return (
     <div className="min-h-screen flex items-center justify-center p-4 bg-dark-bg text-[#f3f4f6]">
@@ -50,9 +136,9 @@ export const RegisterPage = () => {
           <p className="text-xs text-slate-400">Join the workspace</p>
         </div>
 
-        {errorMsg && (
+        {formError && (
           <div className="bg-rose-500/10 border border-rose-500/20 text-rose-400 p-3 rounded-lg text-xs font-semibold text-center">
-            {errorMsg}
+            {formError}
           </div>
         )}
 
@@ -62,8 +148,11 @@ export const RegisterPage = () => {
             label="Full Name"
             placeholder="John Doe"
             value={name}
-            onChange={(e) => setName(e.target.value)}
+            onChange={(e) => handleNameChange(e.target.value)}
+            onBlur={handleNameBlur}
+            error={nameError}
             required
+            autoComplete="name"
           />
 
           <Input
@@ -71,8 +160,11 @@ export const RegisterPage = () => {
             label="Email Address"
             placeholder="john@example.com"
             value={email}
-            onChange={(e) => setEmail(e.target.value)}
+            onChange={(e) => handleEmailChange(e.target.value)}
+            onBlur={handleEmailBlur}
+            error={emailError}
             required
+            autoComplete="email"
           />
 
           <Input
@@ -80,8 +172,11 @@ export const RegisterPage = () => {
             label="Password"
             placeholder="••••••••"
             value={password}
-            onChange={(e) => setPassword(e.target.value)}
+            onChange={(e) => handlePasswordChange(e.target.value)}
+            onBlur={handlePasswordBlur}
+            error={passwordError}
             required
+            autoComplete="new-password"
           />
 
           <div className="flex flex-col gap-1.5 w-full">
@@ -104,7 +199,7 @@ export const RegisterPage = () => {
             </select>
           </div>
 
-          <Button type="submit" isLoading={loading} className="w-full mt-2">
+          <Button type="submit" isLoading={loading} disabled={!isFormValid || loading} className="w-full mt-2">
             Register Account
           </Button>
         </form>
@@ -119,4 +214,5 @@ export const RegisterPage = () => {
     </div>
   );
 };
+
 export default RegisterPage;
