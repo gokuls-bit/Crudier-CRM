@@ -128,7 +128,7 @@ export const ArticleReader = () => {
             <div className="flex flex-col gap-4 bg-rose-50/20 border border-rose-200 p-4 rounded-xl">
               <div className="flex justify-between items-center text-xs font-bold text-rose-800">
                 <span className="flex items-center gap-1">
-                  <GitCompare className="w-4 h-4" /> Compare: Current (V{article.version}) vs Older (V{selectedOldVersion.version})
+                  <GitDiff className="w-4 h-4" /> Compare: Current (V{article.version}) vs Older (V{selectedOldVersion.version})
                 </span>
                 <button 
                   onClick={() => setDiffMode(false)}
@@ -195,7 +195,7 @@ export const ArticleReader = () => {
         {/* Right pane: Version History logs */}
         <div className="bg-white border border-[#E0E3E8] p-6 rounded-xl flex flex-col gap-4 shadow-sm text-left">
           <div className="flex items-center gap-1.5 border-b pb-2">
-            <GitCompare className="w-4 h-4 text-[#00A9CE]" />
+            <GitDiff className="w-4 h-4 text-[#00A9CE]" />
             <h3 className="text-xs font-bold uppercase tracking-wider text-slate-400">Version History</h3>
           </div>
 

@@ -4,7 +4,7 @@ import { useToastStore } from '../../store/toast.store';
 import PageHeader from '../../components/layout/PageHeader';
 import Button from '../../components/ui/Button';
 import Input from '../../components/ui/Input';
-import { ShoppingBag, Clock, ShieldCheck, ShoppingCart, Checklist } from '@phosphor-icons/react';
+import { ShoppingBag, Clock, ShieldCheck, ShoppingCart, ListChecks } from '@phosphor-icons/react';
 
 export const ServiceCatalog = () => {
   const [items, setItems] = useState([]);
@@ -210,7 +210,7 @@ export const ServiceCatalog = () => {
           {/* Catalog Request fulfillment tracker */}
           <div className="bg-white border border-[#E0E3E8] p-6 rounded-xl flex flex-col gap-4 shadow-sm">
             <div className="flex items-center gap-1.5 border-b pb-2">
-              <Checklist className="w-5 h-5 text-[#00A9CE]" />
+              <ListChecks className="w-5 h-5 text-[#00A9CE]" />
               <h3 className="text-xs font-bold uppercase tracking-wider text-slate-400">Order tracking & Fulfillment board</h3>
             </div>
 
