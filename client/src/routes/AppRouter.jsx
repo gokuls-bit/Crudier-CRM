@@ -128,6 +128,9 @@ const AppRouter = () => {
         <Route path={routePaths.LOGIN} element={<LoginPage />} />
         <Route path={routePaths.REGISTER} element={<RegisterPage />} />
         <Route path={routePaths.UNAUTHORIZED} element={<UnauthorizedPage />} />
+        <Route path={routePaths.OAUTH_CALLBACK} element={<OAuthCallbackPage />} />
+        <Route path={routePaths.FORGOT_PASSWORD} element={<ForgotPasswordPage />} />
+        <Route path={routePaths.EMAIL_VERIFICATION} element={<EmailVerificationPage />} />
 
         {/* Protected Authenticated Routes */}
         <Route element={<ProtectedRoute />}>
@@ -143,6 +146,8 @@ const AppRouter = () => {
             <Route path={routePaths.NOTES} element={<NotesPage />} />
             <Route path={routePaths.CHAT} element={<ChatPage />} />
             <Route path={routePaths.SETTINGS} element={<SettingsPage />} />
+            <Route path={routePaths.SECURITY_SETTINGS} element={<SecuritySettingsPage />} />
+            <Route path={routePaths.TWO_FACTOR_SETUP} element={<TwoFactorSetupPage />} />
 
             {/* Executive Dashboard Guard */}
             <Route element={<RoleRoute allowedRoles={[ROLES.CEO, ROLES.MD, ROLES.COO, ROLES.FOUNDER, ROLES.ADMIN]} />}>
