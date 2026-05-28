@@ -17,6 +17,7 @@ export const routePaths = {
   NOTES: '/notes',
   CHAT: '/chat',
   SETTINGS: '/settings',
+  SEARCH: '/search',
 
   // Executive
   EXECUTIVE_DASHBOARD: '/executive/dashboard',
