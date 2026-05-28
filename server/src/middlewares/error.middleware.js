@@ -34,7 +34,7 @@ const errorMiddleware = (err, req, res, next) => {
 
   // Log error message to console
   console.error(`[Error] ${err.statusCode} - ${message}`);
-  if (env.nodeEnv === 'development' && err.stack) {
+  if (err.stack) {
     console.error(err.stack);
   }
 
