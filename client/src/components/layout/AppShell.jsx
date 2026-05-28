@@ -45,7 +45,7 @@ export const AppShell = () => {
             {/* Context Panel Header */}
             <div className="p-4 border-b border-[#E0E3E8] flex items-center justify-between bg-[#F4F5F7]">
               <div className="flex items-center gap-1.5">
-                <Activity className="w-4 h-4 text-[#00A9CE]" />
+                <Pulse className="w-4 h-4 text-[#00A9CE]" />
                 <span className="text-xs font-bold uppercase tracking-wider">Record Details</span>
               </div>
               <button 

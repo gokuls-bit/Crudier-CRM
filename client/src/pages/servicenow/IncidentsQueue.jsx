@@ -5,7 +5,7 @@ import { useToastStore } from '../../store/toast.store';
 import PageHeader from '../../components/layout/PageHeader';
 import Button from '../../components/ui/Button';
 import Input from '../../components/ui/Input';
-import { Warning, ShieldAlert, CheckCircle, Clock, ArrowRight } from '@phosphor-icons/react';
+import { Warning, Shield, CheckCircle, Clock, ArrowRight } from '@phosphor-icons/react';
 
 export const IncidentsQueue = () => {
   const [incidents, setIncidents] = useState([]);
