@@ -1,9 +1,16 @@
 import { create } from 'zustand';
 
+// Setup initial density mode and apply corresponding class
+const initialDensity = localStorage.getItem('crudier_density') || 'default';
+document.body?.classList.add(`density-${initialDensity}`);
+
 export const useUiStore = create((set) => ({
   sidebarCollapsed: false,
-  isDarkMode: true, // Default to true for the dark premium aesthetic!
+  isDarkMode: false, // Default to light mode for ServiceNow design language
   activeModals: {},
+  density: initialDensity,
+  contextPanelOpen: false,
+  contextRecord: null,
 
   toggleSidebar: () => set((state) => ({ sidebarCollapsed: !state.sidebarCollapsed })),
   setSidebarCollapsed: (collapsed) => set({ sidebarCollapsed: collapsed }),
@@ -26,6 +33,17 @@ export const useUiStore = create((set) => ({
     }
     set({ isDarkMode: isDark });
   },
+
+  setDensity: (mode) => {
+    const prevMode = localStorage.getItem('crudier_density') || 'default';
+    document.body?.classList.remove(`density-${prevMode}`);
+    document.body?.classList.add(`density-${mode}`);
+    localStorage.setItem('crudier_density', mode);
+    set({ density: mode });
+  },
+
+  openContextPanel: (record) => set({ contextPanelOpen: true, contextRecord: record }),
+  closeContextPanel: () => set({ contextPanelOpen: false, contextRecord: null }),
 
   openModal: (modalId, data = null) => set((state) => ({
     activeModals: { ...state.activeModals, [modalId]: data || true },
