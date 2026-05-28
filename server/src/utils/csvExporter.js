@@ -13,7 +13,7 @@
  * @returns {string} CSV text
  */
 const exportToCSV = (data, headers) => {
-  if (!data || data.length === 0) return '';
+  if (!data) return '';
 
   const headerKeys = Object.keys(headers);
   const headerLabels = Object.values(headers);

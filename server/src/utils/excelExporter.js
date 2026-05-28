@@ -13,7 +13,7 @@
  * @returns {string} Excel HTML markup
  */
 const exportToExcel = (data, headers) => {
-  if (!data || data.length === 0) return '';
+  if (!data) return '';
 
   const headerKeys = Object.keys(headers);
   const headerLabels = Object.values(headers);
