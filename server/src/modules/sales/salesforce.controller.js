@@ -323,7 +323,10 @@ const salesforceController = {
     return ApiResponse.success(res, 'Outbound email queued successfully.', result);
   },
 
-  createTemplate: async (workspaceId, req, res) => {
+  createTemplate: async (req, res) => {
+    const workspaceId = req.user.workspaceId;
+    if (!workspaceId) throw new ApiError('Workspace context missing.', 400);
+
     const template = await salesforceRepository.createEmailTemplate(workspaceId, req.body);
     return ApiResponse.success(res, 'Email template created.', template, 201);
   },
