@@ -1,4 +1,5 @@
 import axios from 'axios';
+import { useAuthStore } from '../store/auth.store';
 
 const api = axios.create({
   baseURL: import.meta.env.VITE_API_URL || 'http://localhost:5000/api/v1',
@@ -21,6 +22,8 @@ api.interceptors.request.use(
   (error) => Promise.reject(error)
 );
 
+import { useAuthStore } from '../store/auth.store';
+
 // Response Interceptor: Handle Unauthorized & Token Refresh
 api.interceptors.response.use(
   (response) => response,
@@ -35,16 +38,19 @@ api.interceptors.response.use(
           {},
           { withCredentials: true }
         );
-        const { token } = refreshResponse.data.data;
+        const data = refreshResponse.data?.data;
+        const token = data?.accessToken || data?.token;
         if (token) {
-          localStorage.setItem('crudier_token', token);
+          // Sync with Zustand store and localstorage
+          const user = useAuthStore.getState().user;
+          useAuthStore.getState().setAuth(user, token);
+          
           originalRequest.headers.Authorization = `Bearer ${token}`;
           return api(originalRequest);
         }
       } catch (refreshError) {
         // Clear auth and redirect
-        localStorage.removeItem('crudier_token');
-        localStorage.removeItem('crudier_user');
+        useAuthStore.getState().clearAuth();
         window.location.href = '/login';
       }
     }
