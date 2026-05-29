@@ -154,14 +154,15 @@ async function runTests() {
     email: 'rep@crudier.com',
     role: 'Sales',
     workspaceId: workspaceId,
-    password: 'securePassword123'
+    password: 'securePassword123',
+    isActive: true
   };
   store.users.push(mockUser);
 
   // Generate session cookie bypass or mock token
   const jwt = require('jsonwebtoken');
   const token = jwt.sign(
-    { _id: mockUser._id.toString(), email: mockUser.email, role: mockUser.role, workspaceId: mockUser.workspaceId.toString() },
+    { id: mockUser._id.toString(), email: mockUser.email, role: mockUser.role, workspaceId: mockUser.workspaceId.toString() },
     process.env.JWT_SECRET || 'testsecret',
     { expiresIn: '1h' }
   );
