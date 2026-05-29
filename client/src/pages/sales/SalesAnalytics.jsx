@@ -43,13 +43,13 @@ export const SalesAnalytics = () => {
         <StatCard title="Top Conversion Rate" value="65.0%" icon={Award} />
       </div>
 
-      <div className="glass-card p-5 rounded-xl border border-white/5 flex flex-col gap-4">
-        <h3 className="text-sm font-bold text-slate-200 Outfit">Closed Won Sales Revenue (6-Month Trend)</h3>
+      <div className="bg-white p-5 rounded-xl border border-[#E0E3E8] shadow-sm flex flex-col gap-4">
+        <h3 className="text-sm font-bold text-[#1C2945] Outfit">Closed Won Sales Revenue (6-Month Trend)</h3>
         <LineChart data={mockSalesTrend} height={250} color="#10b981" />
       </div>
-
-      <div className="glass-panel p-5 rounded-xl border border-white/5">
-        <h3 className="text-sm font-bold text-slate-200 mb-4 Outfit">Leaderboard: Top Closed Deals Reps</h3>
+ 
+      <div className="bg-white p-5 rounded-xl border border-[#E0E3E8] shadow-sm">
+        <h3 className="text-sm font-bold text-[#1C2945] mb-4 Outfit">Leaderboard: Top Closed Deals Reps</h3>
         <Table columns={columns} data={mockPerformers} />
       </div>
     </div>
