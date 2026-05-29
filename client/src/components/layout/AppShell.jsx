@@ -4,7 +4,7 @@ import Sidebar from './Sidebar';
 import Topbar from './Topbar';
 import RoleBanner from './RoleBanner';
 import { useUiStore } from '../../store/ui.store';
-import { X, Calendar, Chats, Note, Clock, Pulse } from '@phosphor-icons/react';
+import { X, Calendar, Chats, Note, Clock, Pulse, FileText } from '@phosphor-icons/react';
 import clsx from 'clsx';
 
 export const AppShell = () => {
