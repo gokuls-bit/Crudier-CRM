@@ -13,9 +13,13 @@ const redisClient = createClient({
   url: redisUrl,
   socket: {
     reconnectStrategy: (retries) => {
+      if (retries > 5) {
+        logger.error('[Redis] Connection attempts exhausted. Running without Redis.');
+        return new Error('Redis connection failed');
+      }
       // Reconnect strategy: exponential delay up to 3000ms
-      const delay = Math.min(retries * 50, 3000);
-      logger.warn(`[Redis] Connection failed. Retrying in ${delay}ms...`);
+      const delay = Math.min(retries * 100, 3000);
+      logger.warn(`[Redis] Connection failed. Retrying in ${delay}ms (attempt ${retries}/5)...`);
       return delay;
     }
   }
