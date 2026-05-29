@@ -1,50 +1,38 @@
 /**
  * ============================================================
- * Crudier CRM — Bull Queue Manager
+ * Crudier CRM — In-Memory Queue Manager (Redis Bypassed)
  * ============================================================
- * Sets up Redis-backed job queues via Bull to process resource-heavy
- * tasks (such as sending emails, dispatching alerts, or processing
- * bulk exports) asynchronously.
+ * Processes tasks asynchronously in memory, removing the dependency
+ * on Redis-backed Bull queues.
  */
 
-const Queue = require('bull');
 const logger = require('../../config/logger');
 const sendEmail = require('../utils/sendEmail');
 
-// Get Redis configurations
-const redisUrl = process.env.REDIS_URL || 'redis://127.0.0.1:6379';
-
-// ── 1. Create the Email Queue ────────────────────────────────
-const emailQueue = new Queue('email-queue', redisUrl);
-
-// Process email delivery jobs asynchronously
-emailQueue.process(async (job) => {
-  const { to, subject, text, html } = job.data;
-  logger.info(`[Queue Worker] Dispatching email job ${job.id} targeting ${to}...`);
-  return await sendEmail({ to, subject, text, html });
-});
-
-// Listener events
-emailQueue.on('completed', (job) => {
-  logger.info(`[Queue Worker] Job ${job.id} completed successfully.`);
-});
-
-emailQueue.on('failed', (job, err) => {
-  logger.error(`[Queue Worker] Job ${job.id} failed with error:`, err);
-});
+// Mock email queue structure for compatibility
+const emailQueue = {
+  process: (fn) => {
+    logger.info('[Queue Worker] Standalone mock processor active.');
+  },
+  on: (event, handler) => {},
+};
 
 /**
- * Queue an email delivery task helper.
+ * Queue an email delivery task helper (in-memory async execution).
  * @param {Object} emailOpts – { to, subject, text, html }
  */
 const queueEmail = (emailOpts) => {
-  emailQueue.add(emailOpts, {
-    attempts: 3, // Retry up to 3 times on failure
-    backoff: {
-      type: 'exponential',
-      delay: 5000, // Wait 5 seconds, then 10 seconds, etc.
-    },
-    removeOnComplete: true, // Clean up finished job metadata from Redis
+  logger.info(`[Queue Worker] Adding email to queue for: ${emailOpts.to}`);
+  
+  // Dispatch asynchronously using setImmediate to avoid blocking the request loop
+  setImmediate(async () => {
+    try {
+      logger.info(`[Queue Worker] Asynchronously dispatching email targeting ${emailOpts.to}...`);
+      await sendEmail(emailOpts);
+      logger.info(`[Queue Worker] Mock email job for ${emailOpts.to} completed successfully.`);
+    } catch (err) {
+      logger.error(`[Queue Worker] Mock email job for ${emailOpts.to} failed:`, err);
+    }
   });
 };
 
