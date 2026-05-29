@@ -5,7 +5,7 @@ import { useToastStore } from '../../store/toast.store';
 import PageHeader from '../../components/layout/PageHeader';
 import Button from '../../components/ui/Button';
 import Input from '../../components/ui/Input';
-import { User, Plus, UsersThree, ArrowsMerge, Paperplane } from '@phosphor-icons/react';
+import { User, Plus, UsersThree, ArrowsMerge, PaperPlaneTilt } from '@phosphor-icons/react';
 
 export const ContactsList = () => {
   const navigate = useNavigate();
@@ -144,7 +144,7 @@ export const ContactsList = () => {
         actions={
           <div className="flex gap-2">
             <Button onClick={() => setShowConvertModal(true)} variant="secondary" size="sm" className="flex items-center gap-1.5">
-              <Paperplane className="w-4 h-4" />
+              <PaperPlaneTilt className="w-4 h-4" />
               <span>Convert Lead</span>
             </Button>
             <Button onClick={() => setShowMergeModal(true)} variant="secondary" size="sm" className="flex items-center gap-1.5">
