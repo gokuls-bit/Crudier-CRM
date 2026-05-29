@@ -388,7 +388,10 @@ const salesforceRepository = {
   
   createOpportunity: async (workspaceId, data, actorId) => {
     const db = getDb();
-    const stage = data.stage || 'Prospecting';
+    let stage = data.stage || 'Prospecting';
+    if (stage) {
+      stage = stage.replace(/&#x2F;/g, '/');
+    }
     const rule = STAGE_RULES[stage] || { prob: 10, cat: 'Pipeline' };
 
     const opp = {
@@ -453,6 +456,7 @@ const salesforceRepository = {
     
     // Auto calculate probability and category if stage changes
     if (cleanUpdate.stage) {
+      cleanUpdate.stage = cleanUpdate.stage.replace(/&#x2F;/g, '/');
       const rule = STAGE_RULES[cleanUpdate.stage];
       if (rule) {
         cleanUpdate.probability = rule.prob;
