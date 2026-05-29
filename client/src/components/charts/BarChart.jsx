@@ -6,24 +6,24 @@ export const BarChart = ({ data = [], dataKey = 'value', xAxisKey = 'name', colo
     <div style={{ width: '100%', height: height }} className="text-xs">
       <ResponsiveContainer width="100%" height="100%">
         <RechartsBarChart data={data} margin={{ top: 5, right: 10, left: -20, bottom: 5 }}>
-          <CartesianGrid strokeDasharray="3 3" stroke="rgba(255,255,255,0.04)" />
+          <CartesianGrid strokeDasharray="3 3" stroke="#E0E3E8" />
           <XAxis 
             dataKey={xAxisKey} 
-            stroke="rgba(255,255,255,0.4)" 
+            stroke="rgba(28, 41, 69, 0.4)" 
             tickLine={false}
-            tick={{ fill: 'rgba(255,255,255,0.4)', fontSize: 10 }}
+            tick={{ fill: '#1C2945', fontSize: 10 }}
           />
           <YAxis 
-            stroke="rgba(255,255,255,0.4)" 
+            stroke="rgba(28, 41, 69, 0.4)" 
             tickLine={false}
-            tick={{ fill: 'rgba(255,255,255,0.4)', fontSize: 10 }}
+            tick={{ fill: '#1C2945', fontSize: 10 }}
           />
           <Tooltip
             contentStyle={{
-              background: '#0f1422',
-              borderColor: 'rgba(255,255,255,0.08)',
+              background: '#ffffff',
+              borderColor: '#E0E3E8',
               borderRadius: '8px',
-              color: '#f3f4f6',
+              color: '#1C2945',
               fontSize: '11px',
             }}
           />

@@ -31,17 +31,17 @@ export const Table = ({ columns = [], data = [], onRowClick, className, emptyMes
   };
 
   return (
-    <div className={clsx('w-full overflow-x-auto rounded-lg border border-white/5 bg-slate-900/20 custom-scrollbar', className)}>
+    <div className={clsx('w-full overflow-x-auto rounded-lg border border-[#E0E3E8] bg-white custom-scrollbar', className)}>
       <table className="w-full text-left border-collapse text-xs">
         <thead>
-          <tr className="bg-slate-900/60 border-b border-white/5">
+          <tr className="bg-[#F4F5F7] border-b border-[#E0E3E8]">
             {columns.map((col) => (
               <th
                 key={col.key}
                 onClick={() => col.sortable && requestSort(col.key)}
                 className={clsx(
-                  'px-4 py-3 font-semibold text-slate-400 Outfit',
-                  col.sortable && 'cursor-pointer select-none hover:text-slate-200',
+                  'px-4 py-3 font-semibold text-[#1C2945] Outfit',
+                  col.sortable && 'cursor-pointer select-none hover:text-[#00A9CE]',
                   col.className
                 )}
               >
@@ -49,7 +49,7 @@ export const Table = ({ columns = [], data = [], onRowClick, className, emptyMes
                   <span>{col.label}</span>
                   {col.sortable && (
                     sortConfig.key === col.key ? (
-                      sortConfig.direction === 'asc' ? <ChevronUp className="w-3 h-3 text-brand-400" /> : <ChevronDown className="w-3 h-3 text-brand-400" />
+                      sortConfig.direction === 'asc' ? <ChevronUp className="w-3 h-3 text-[#00A9CE]" /> : <ChevronDown className="w-3 h-3 text-[#00A9CE]" />
                     ) : <ArrowUpDown className="w-3 h-3 text-slate-500 hover:text-slate-400" />
                   )}
                 </div>
@@ -57,19 +57,19 @@ export const Table = ({ columns = [], data = [], onRowClick, className, emptyMes
             ))}
           </tr>
         </thead>
-        <tbody className="divide-y divide-white/5">
+        <tbody className="divide-y divide-[#E0E3E8]">
           {sortedData.length > 0 ? (
             sortedData.map((row, idx) => (
               <tr
                 key={row._id || row.id || idx}
                 onClick={() => onRowClick?.(row)}
                 className={clsx(
-                  'hover:bg-white/5 transition-colors',
+                  'hover:bg-slate-50 transition-colors',
                   onRowClick && 'cursor-pointer'
                 )}
               >
                 {columns.map((col) => (
-                  <td key={col.key} className={clsx('px-4 py-3 text-slate-300', col.className)}>
+                  <td key={col.key} className={clsx('px-4 py-3 text-slate-700 font-medium', col.className)}>
                     {col.render ? col.render(row[col.key], row) : row[col.key]}
                   </td>
                 ))}

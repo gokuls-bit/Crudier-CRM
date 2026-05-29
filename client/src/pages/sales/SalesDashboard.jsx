@@ -41,13 +41,13 @@ export const SalesDashboard = () => {
       </div>
 
       <div className="grid grid-cols-1 lg:grid-cols-3 gap-6">
-        <div className="glass-card p-5 rounded-xl border border-white/5 lg:col-span-2 flex flex-col gap-4">
-          <h3 className="text-sm font-bold text-slate-200 Outfit">Sales Pipeline Stage distribution</h3>
+        <div className="bg-white p-5 rounded-xl border border-[#E0E3E8] shadow-sm lg:col-span-2 flex flex-col gap-4">
+          <h3 className="text-sm font-bold text-[#1C2945] Outfit">Sales Pipeline Stage distribution</h3>
           <BarChart data={mockPipelineStages} height={240} color="#10b981" />
         </div>
 
-        <div className="glass-card p-5 rounded-xl border border-white/5">
-          <h3 className="text-sm font-bold text-slate-200 mb-4 Outfit">Today's Follow-up Agenda</h3>
+        <div className="bg-white p-5 rounded-xl border border-[#E0E3E8] shadow-sm">
+          <h3 className="text-sm font-bold text-[#1C2945] mb-4 Outfit">Today's Follow-up Agenda</h3>
           <Table columns={columns} data={mockFollowups} emptyMessage="No followups scheduled for today." />
         </div>
       </div>
