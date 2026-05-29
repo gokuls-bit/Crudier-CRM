@@ -5,12 +5,16 @@
 @layer base {
   body {
     font-family: 'Source Sans 3', 'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Oxygen, Ubuntu, Cantarell, sans-serif;
-    @apply bg-[#F4F5F7] text-[#1C2945] min-h-screen overflow-x-hidden;
+    background-color: #F4F5F7;
+    color: #1C2945;
+    min-height: 100vh;
+    overflow-x: hidden;
   }
 
   h1, h2, h3, h4, h5, h6 {
     font-family: 'Source Sans 3', 'Outfit', sans-serif;
     font-weight: 600;
+    color: #1C2945;
   }
 
   /* Dense data tables custom font */
@@ -174,6 +178,44 @@
     color: #0176D3;
     border: 1px solid #0176D3;
     @apply hover:bg-[#B0D9FA]/10 font-semibold rounded px-4 py-2 transition-colors;
+  }
+
+  /* Support legacy glass styling in ServiceNow light mode */
+  .glass-card, .glass-panel {
+    background-color: #FFFFFF !important;
+    border: 1px solid #E0E3E8 !important;
+    box-shadow: 0 1px 3px 0 rgba(0, 0, 0, 0.05) !important;
+    color: #1C2945 !important;
+  }
+
+  .glass-input {
+    background-color: #FFFFFF !important;
+    border: 1px solid #E0E3E8 !important;
+    color: #1C2945 !important;
+  }
+
+  .glass-input::placeholder {
+    color: #94a3b8 !important;
+  }
+
+  /* Automatically correct dark/light text overrides inside legacy panels */
+  .glass-card h1, .glass-card h2, .glass-card h3, .glass-card h4, .glass-card h5, .glass-card h6,
+  .glass-panel h1, .glass-panel h2, .glass-panel h3, .glass-panel h4, .glass-panel h5, .glass-panel h6 {
+    color: #1C2945 !important;
+  }
+
+  .glass-card .text-slate-200, .glass-panel .text-slate-200,
+  .glass-card .text-slate-300, .glass-panel .text-slate-300,
+  .glass-card .text-white, .glass-panel .text-white {
+    color: #1C2945 !important;
+  }
+
+  .glass-card .text-slate-400, .glass-panel .text-slate-400 {
+    color: #64748b !important;
+  }
+
+  .glass-card .text-slate-500, .glass-panel .text-slate-500 {
+    color: #475569 !important;
   }
 }
 

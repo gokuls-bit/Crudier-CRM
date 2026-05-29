@@ -50,13 +50,13 @@ export const FollowUps = () => {
       />
 
       <div className="grid grid-cols-1 lg:grid-cols-3 gap-6">
-        <div className="glass-panel p-5 rounded-xl border border-white/5 lg:col-span-2">
-          <h3 className="text-sm font-bold text-slate-200 mb-4 Outfit">Scheduled Follow-up Reminders</h3>
+        <div className="bg-white p-5 rounded-xl border border-[#E0E3E8] shadow-sm lg:col-span-2">
+          <h3 className="text-sm font-bold text-[#1C2945] mb-4 Outfit">Scheduled Follow-up Reminders</h3>
           <Table columns={columns} data={followups} />
         </div>
 
-        <div className="glass-panel p-5 rounded-xl border border-white/5 h-fit flex flex-col gap-4">
-          <h3 className="text-sm font-bold text-slate-200 Outfit">Schedule Reminder</h3>
+        <div className="bg-white p-5 rounded-xl border border-[#E0E3E8] shadow-sm h-fit flex flex-col gap-4">
+          <h3 className="text-sm font-bold text-[#1C2945] Outfit">Schedule Reminder</h3>
           <form onSubmit={handleCreate} className="flex flex-col gap-4">
             <Input
               type="text"

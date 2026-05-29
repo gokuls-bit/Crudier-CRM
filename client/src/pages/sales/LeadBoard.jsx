@@ -32,7 +32,7 @@ export const LeadBoard = () => {
       key: 'value', 
       label: 'Pipeline Value',
       sortable: true,
-      render: (val) => <span className="font-semibold text-slate-200">${val.toLocaleString()}</span>
+      render: (val) => <span className="font-semibold text-slate-700">${val.toLocaleString()}</span>
     },
     { 
       key: 'stage', 
@@ -53,7 +53,7 @@ export const LeadBoard = () => {
       )
     }
   ];
-
+ 
   return (
     <div className="flex flex-col gap-6">
       <PageHeader 
@@ -71,8 +71,8 @@ export const LeadBoard = () => {
           </div>
         }
       />
-
-      <div className="glass-panel p-5 rounded-xl border border-white/5">
+ 
+      <div className="bg-white p-5 rounded-xl border border-[#E0E3E8] shadow-sm">
         <Table columns={columns} data={filteredLeads} />
       </div>
     </div>

@@ -40,30 +40,30 @@ export const LeadDetail = () => {
       />
 
       <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
-        <div className="glass-panel p-5 rounded-xl border border-white/5 md:col-span-2 flex flex-col gap-4">
+        <div className="bg-white p-5 rounded-xl border border-[#E0E3E8] shadow-sm md:col-span-2 flex flex-col gap-4">
           <div>
-            <h4 className="text-xs font-semibold text-slate-400 Outfit uppercase">Deal Notes</h4>
-            <p className="text-xs text-slate-350 leading-relaxed mt-2">{lead.notes}</p>
+            <h4 className="text-xs font-semibold text-slate-500 Outfit uppercase">Deal Notes</h4>
+            <p className="text-xs text-slate-700 leading-relaxed mt-2">{lead.notes}</p>
           </div>
-
-          <div className="border-t border-white/5 pt-4 flex flex-col gap-3">
-            <h4 className="text-xs font-semibold text-slate-400 Outfit uppercase">Interaction Timeline</h4>
+ 
+          <div className="border-t border-[#E0E3E8] pt-4 flex flex-col gap-3">
+            <h4 className="text-xs font-semibold text-slate-500 Outfit uppercase">Interaction Timeline</h4>
             <div className="flex flex-col gap-2.5 max-h-48 overflow-y-auto custom-scrollbar mt-1">
               {activities.length > 0 ? (
                 activities.map((a, idx) => (
-                  <div key={idx} className="p-3 bg-slate-900/40 border border-white/5 rounded-lg flex flex-col gap-1 text-[11px]">
-                    <div className="flex justify-between items-center font-bold text-slate-200">
+                  <div key={idx} className="p-3 bg-[#F4F5F7] border border-[#E0E3E8] rounded-lg flex flex-col gap-1 text-[11px]">
+                    <div className="flex justify-between items-center font-bold text-[#1C2945]">
                       <span>Sales Update Activity</span>
                       <span className="text-[9px] text-slate-500">{a.time}</span>
                     </div>
-                    <p className="text-slate-350">{a.act}</p>
+                    <p className="text-slate-600">{a.act}</p>
                   </div>
                 ))
               ) : (
                 <span className="text-xs text-slate-500">No client activities logged yet.</span>
               )}
             </div>
-
+ 
             <form onSubmit={handleAddActivity} className="flex gap-2 mt-2">
               <Input
                 type="text"
@@ -78,17 +78,17 @@ export const LeadDetail = () => {
             </form>
           </div>
         </div>
-
-        <div className="glass-panel p-5 rounded-xl border border-white/5 h-fit flex flex-col gap-4">
-          <h4 className="text-xs font-semibold text-slate-400 Outfit uppercase">Lead Metadata</h4>
+ 
+        <div className="bg-white p-5 rounded-xl border border-[#E0E3E8] shadow-sm h-fit flex flex-col gap-4">
+          <h4 className="text-xs font-semibold text-slate-500 Outfit uppercase">Lead Metadata</h4>
           <div className="flex flex-col gap-3 text-xs">
             <div className="flex justify-between">
               <span className="text-slate-500">Contact Email:</span>
-              <span className="font-semibold text-slate-200">{lead.email}</span>
+              <span className="font-semibold text-slate-700">{lead.email}</span>
             </div>
             <div className="flex justify-between">
               <span className="text-slate-500">Deal Value:</span>
-              <span className="font-bold text-slate-200">${lead.value.toLocaleString()}</span>
+              <span className="font-bold text-slate-700">${lead.value.toLocaleString()}</span>
             </div>
             <div className="flex justify-between">
               <span className="text-slate-500">Pipeline Stage:</span>
