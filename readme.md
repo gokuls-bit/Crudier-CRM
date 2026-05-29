@@ -69,10 +69,8 @@ The application is configured to run out-of-the-box locally.
 If connection to the Atlas cluster fails or is restricted by IP whitelist settings, the server automatically connects to the local MongoDB daemon:
 - **Default Database URL**: `mongodb://127.0.0.1:27017/crudier`
 
-### Redis Standalone Bypass
-To make developer onboarding seamless, Redis has been bypassed for local environments.
-- **Redis Sync & Cache**: The cache middleware and Socket.IO cluster synchronizer automatically bypass Redis and run in robust standalone mode.
-- **Bull Queues**: Bull queue managers are bypassed, processing asynchronous tasks (such as email dispatches) asynchronously in-memory using Node's `setImmediate` loop.
+### Asynchronous Task Queue
+Asynchronous tasks (such as email dispatches) are processed in-memory using Node's `setImmediate` loop, running efficiently without requiring any external queue services.
 
 ---
 
