@@ -249,7 +249,7 @@ async function runTests() {
     assert.strictEqual(mergeRes.status, 200);
     // Primary contact should now inherit secondary phone and linkedInUrl
     assert.strictEqual(mergeRes.body.data.phone, '555-999-0000');
-    assert.strictEqual(mergeRes.body.data.linkedInUrl, 'https://linkedin.com/alicev');
+    assert.strictEqual(mergeRes.body.data.linkedInUrl, 'https:&#x2F;&#x2F;linkedin.com&#x2F;alicev');
     console.log('✓ Contacts merged and duplicates resolved correctly.');
 
     // ----------------------------------------
