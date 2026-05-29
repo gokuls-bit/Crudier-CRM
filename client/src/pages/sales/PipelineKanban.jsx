@@ -42,33 +42,33 @@ export const PipelineKanban = () => {
           const stageValue = stageDeals.reduce((sum, d) => sum + d.value, 0);
 
           return (
-            <div key={stage} className="bg-slate-900/40 border border-white/5 rounded-xl p-3 flex flex-col gap-3 min-h-[450px]">
-              <div className="flex justify-between items-center px-1 border-b border-white/5 pb-2">
+            <div key={stage} className="bg-slate-100/60 border border-[#E0E3E8] rounded-xl p-3 flex flex-col gap-3 min-h-[450px]">
+              <div className="flex justify-between items-center px-1 border-b border-[#E0E3E8] pb-2">
                 <div className="flex flex-col">
-                  <span className="text-xs font-bold text-slate-200 Outfit">{stage}</span>
+                  <span className="text-xs font-bold text-[#1C2945] Outfit">{stage}</span>
                   <span className="text-[10px] text-slate-500 font-bold mt-0.5">${stageValue.toLocaleString()}</span>
                 </div>
                 <Badge variant="brand">{stageDeals.length}</Badge>
               </div>
-
+ 
               <div className="flex flex-col gap-2.5">
                 {stageDeals.map(d => (
-                  <div key={d._id} className="glass-card p-3.5 rounded-lg border border-white/5 flex flex-col gap-3">
+                  <div key={d._id} className="bg-white p-3.5 rounded-lg border border-[#E0E3E8] shadow-sm flex flex-col gap-3">
                     <div className="flex justify-between items-start gap-2">
-                      <p className="text-xs font-semibold text-slate-100 leading-normal">{d.company}</p>
+                      <p className="text-xs font-semibold text-slate-700 leading-normal">{d.company}</p>
                     </div>
-
+ 
                     <div className="flex justify-between items-center text-xs">
                       <span className="text-slate-500">Pipeline:</span>
-                      <span className="font-bold text-brand-400">${d.value.toLocaleString()}</span>
+                      <span className="font-bold text-[#00A9CE]">${d.value.toLocaleString()}</span>
                     </div>
-
+ 
                     {/* Move controls */}
-                    <div className="flex justify-end gap-1 border-t border-white/5 pt-2 mt-1">
+                    <div className="flex justify-end gap-1 border-t border-[#E0E3E8] pt-2 mt-1">
                       {stage !== 'New Lead' && (
                         <button 
                           onClick={() => moveDeal(d._id, -1)} 
-                          className="p-1 rounded bg-white/5 hover:bg-white/10 text-slate-400 hover:text-white transition-colors"
+                          className="p-1 rounded bg-slate-100 hover:bg-slate-200 text-slate-500 hover:text-[#1C2945] transition-colors"
                         >
                           <ChevronLeft className="w-3 h-3" />
                         </button>
@@ -76,7 +76,7 @@ export const PipelineKanban = () => {
                       {stage !== 'Closed Won' && (
                         <button 
                           onClick={() => moveDeal(d._id, 1)} 
-                          className="p-1 rounded bg-brand-600/20 hover:bg-brand-600/35 text-brand-400 hover:text-brand-300 transition-colors"
+                          className="p-1 rounded bg-[#00A9CE]/10 hover:bg-[#00A9CE]/20 text-[#00A9CE] transition-colors"
                         >
                           <ChevronRight className="w-3 h-3" />
                         </button>
