@@ -8,6 +8,8 @@ const api = axios.create({
     'Content-Type': 'application/json',
   },
   withCredentials: true, // for cookie-based session/refresh tokens if needed
+  xsrfCookieName: 'x-csrf-token',
+  xsrfHeaderName: 'x-csrf-token',
 });
 
 // Request Interceptor: Attach Auth Token
