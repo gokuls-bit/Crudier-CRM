@@ -117,7 +117,9 @@ const authController = {
       throw new ApiError('OAuth callback failed: Code is missing.', 400);
     }
 
-    const email = `mock_${provider}_${Math.floor(1000 + Math.random() * 9000)}@crm.local`;
+    const email = (provider === 'google' || provider === 'gmail')
+      ? `mock_${provider}_${Math.floor(1000 + Math.random() * 9000)}@gmail.com`
+      : `mock_${provider}_${Math.floor(1000 + Math.random() * 9000)}@crm.local`;
     const name = `Mock ${provider.charAt(0).toUpperCase() + provider.slice(1)} User`;
     const providerId = `mock_id_${Math.floor(100000 + Math.random() * 900000)}`;
 
