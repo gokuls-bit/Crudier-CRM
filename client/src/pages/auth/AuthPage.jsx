@@ -2,6 +2,7 @@ import React, { useState, useEffect } from 'react';
 import { useNavigate, useSearchParams, Link } from 'react-router-dom';
 import { useAuth } from '../../hooks/useAuth';
 import { useToastStore } from '../../store/toast.store';
+import { useAuthStore } from '../../store/auth.store';
 import { routePaths } from '../../routes/routePaths';
 import Input from '../../components/ui/Input';
 import { ShieldCheck, ShieldAlert, Cpu, LogIn, UserPlus, Eye, EyeOff } from 'lucide-react';
@@ -136,7 +137,7 @@ export const AuthPage = ({ initialTab = 'signin' }) => {
           email,
           role: role || 'Developer',
         };
-        const setAuth = (await import('../../store/auth.store')).useAuthStore.getState().setAuth;
+        const setAuth = useAuthStore.getState().setAuth;
         setAuth(mockUser, 'mock_jwt_token');
         addToast('Bypassed credentials check for demo preview.', 'warning');
         navigate(routePaths.DASHBOARD);
@@ -161,7 +162,7 @@ export const AuthPage = ({ initialTab = 'signin' }) => {
       });
 
       const { user, accessToken } = response.data.data;
-      const setAuth = (await import('../../store/auth.store')).useAuthStore.getState().setAuth;
+      const setAuth = useAuthStore.getState().setAuth;
       setAuth(user, accessToken);
       
       addToast('MFA verification successful. Access granted.', 'success');
@@ -175,7 +176,7 @@ export const AuthPage = ({ initialTab = 'signin' }) => {
           email: email || 'demo@crudier.com',
           role: 'Founder',
         };
-        const setAuth = (await import('../../store/auth.store')).useAuthStore.getState().setAuth;
+        const setAuth = useAuthStore.getState().setAuth;
         setAuth(mockUser, 'mock_jwt_token');
         addToast('Demo OTP bypass accepted.', 'warning');
         navigate(routePaths.DASHBOARD);
