@@ -13,6 +13,8 @@ const authRepository = require('./auth.repository');
 const generateTokens = require('../../utils/generateToken');
 const { verifyTOTP, generateSecret, generateOtpauthUrl } = require('../../utils/totp');
 const { encrypt, decrypt } = require('../../utils/encryption');
+const sendEmail = require('../../utils/sendEmail');
+
 
 // Helper to parse user agents into device & browser info
 const parseUserAgent = (ua) => {
@@ -93,6 +95,44 @@ const authService = {
       role: assignedRole,
       isActive: true,
       emailVerified: false,
+    });
+
+    // Send registration welcome email notification asynchronously
+    sendEmail({
+      to: user.email,
+      subject: 'Welcome to Crudier CRM — Account Registered Successfully',
+      text: `Hi ${user.name},\n\nThank you for registering at Crudier CRM! Your account has been successfully created with the role: ${user.role}.\n\nBest regards,\nThe Crudier CRM Team`,
+      html: `
+        <div style="font-family: Arial, sans-serif; max-width: 600px; margin: 0 auto; padding: 20px; border: 1px solid #e0e0e0; border-radius: 10px; background-color: #ffffff; color: #333333;">
+          <div style="text-align: center; margin-bottom: 20px;">
+            <h2 style="color: #6366f1; margin: 0;">🚀 Crudier CRM</h2>
+          </div>
+          <h3 style="color: #111827; margin-bottom: 15px;">Welcome, ${user.name}!</h3>
+          <p style="font-size: 14px; line-height: 1.6; color: #4b5563;">
+            Thank you for registering your workspace account at <strong>Crudier CRM</strong>. We're thrilled to have you join us!
+          </p>
+          <div style="background-color: #f3f4f6; padding: 15px; border-radius: 8px; margin: 20px 0;">
+            <p style="margin: 0; font-size: 14px; font-weight: bold; color: #1f2937;">Registration Details:</p>
+            <ul style="margin: 10px 0 0 0; padding-left: 20px; font-size: 13px; color: #4b5563; line-height: 1.5;">
+              <li><strong>Name:</strong> ${user.name}</li>
+              <li><strong>Email:</strong> ${user.email}</li>
+              <li><strong>Assigned Role:</strong> ${user.role}</li>
+            </ul>
+          </div>
+          <p style="font-size: 14px; line-height: 1.6; color: #4b5563;">
+            You can now access your dashboard and start managing your CRM workspace.
+          </p>
+          <div style="text-align: center; margin-top: 30px;">
+            <a href="http://localhost:3000/login" style="background-color: #6366f1; color: #ffffff; padding: 12px 24px; text-decoration: none; border-radius: 6px; font-weight: bold; font-size: 14px; display: inline-block;">Go to Dashboard</a>
+          </div>
+          <hr style="border: none; border-top: 1px solid #e5e7eb; margin: 30px 0 20px 0;" />
+          <p style="font-size: 11px; text-align: center; color: #9ca3af; margin: 0;">
+            This is an automated notification. Please do not reply directly to this email.
+          </p>
+        </div>
+      `
+    }).catch(err => {
+      console.error('[Mailer Error] Failed to send registration email:', err.message);
     });
 
     delete user.password;
@@ -193,6 +233,44 @@ const authService = {
               connectedAt: new Date(),
             },
           ],
+        });
+
+        // Send welcome email notification asynchronously for social registration
+        sendEmail({
+          to: user.email,
+          subject: `Welcome to Crudier CRM — Registered via ${provider.charAt(0).toUpperCase() + provider.slice(1)}`,
+          text: `Hi ${user.name},\n\nThank you for registering at Crudier CRM! Your account has been successfully created via ${provider}.\n\nBest regards,\nThe Crudier CRM Team`,
+          html: `
+            <div style="font-family: Arial, sans-serif; max-width: 600px; margin: 0 auto; padding: 20px; border: 1px solid #e0e0e0; border-radius: 10px; background-color: #ffffff; color: #333333;">
+              <div style="text-align: center; margin-bottom: 20px;">
+                <h2 style="color: #6366f1; margin: 0;">🚀 Crudier CRM</h2>
+              </div>
+              <h3 style="color: #111827; margin-bottom: 15px;">Welcome, ${user.name}!</h3>
+              <p style="font-size: 14px; line-height: 1.6; color: #4b5563;">
+                Thank you for registering your workspace account at <strong>Crudier CRM</strong> using your <strong>${provider.charAt(0).toUpperCase() + provider.slice(1)}</strong> login. We're thrilled to have you join us!
+              </p>
+              <div style="background-color: #f3f4f6; padding: 15px; border-radius: 8px; margin: 20px 0;">
+                <p style="margin: 0; font-size: 14px; font-weight: bold; color: #1f2937;">Registration Details:</p>
+                <ul style="margin: 10px 0 0 0; padding-left: 20px; font-size: 13px; color: #4b5563; line-height: 1.5;">
+                  <li><strong>Name:</strong> ${user.name}</li>
+                  <li><strong>Email:</strong> ${user.email}</li>
+                  <li><strong>Signed up via:</strong> ${provider}</li>
+                </ul>
+              </div>
+              <p style="font-size: 14px; line-height: 1.6; color: #4b5563;">
+                You can now access your dashboard and start managing your CRM workspace.
+              </p>
+              <div style="text-align: center; margin-top: 30px;">
+                <a href="http://localhost:3000/login" style="background-color: #6366f1; color: #ffffff; padding: 12px 24px; text-decoration: none; border-radius: 6px; font-weight: bold; font-size: 14px; display: inline-block;">Go to Dashboard</a>
+              </div>
+              <hr style="border: none; border-top: 1px solid #e5e7eb; margin: 30px 0 20px 0;" />
+              <p style="font-size: 11px; text-align: center; color: #9ca3af; margin: 0;">
+                This is an automated notification. Please do not reply directly to this email.
+              </p>
+            </div>
+          `
+        }).catch(err => {
+          console.error('[Mailer Error] Failed to send social registration email:', err.message);
         });
       }
     }
